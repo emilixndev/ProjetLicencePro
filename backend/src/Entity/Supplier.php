@@ -32,7 +32,7 @@ class Supplier
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
-    #[ORM\Column(length: 10)]
+    #[ORM\Column(length: 255)]
     private ?string $phone = null;
 
     #[ORM\OneToMany(mappedBy: 'supplier', targetEntity: Material::class)]

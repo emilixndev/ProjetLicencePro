@@ -140,6 +140,9 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/easycorp/easyadmin-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/uid" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/polyfill-uuid" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/doctrine/doctrine-fixtures-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/doctrine/data-fixtures" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/fakerphp/faker" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
