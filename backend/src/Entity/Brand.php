@@ -5,43 +5,45 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use App\Repository\MaterialTypeRepository;
+use ApiPlatform\Metadata\Post;
+use App\Repository\BrandRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Entity(repositoryClass: MaterialTypeRepository::class)]
+#[ORM\Entity(repositoryClass: BrandRepository::class)]
 #[ApiResource(
     operations: [
         new GetCollection(),
         new Get(),
     ],
     normalizationContext: [
-        "groups"=>["read:category"]
+        "groups"=>["read:brand"]
     ],
     order: [
         "name" =>'ASC'
     ],
 )]
-class MaterialType
+class Brand
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["read:materials","read:category"])]
+    #[Groups(["read:materials","read:brand"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["read:materials","read:category"])]
+    #[Groups(["read:materials","read:brand"])]
     private ?string $name = null;
 
-    #[ORM\ManyToMany(targetEntity: Material::class, inversedBy: 'materialTypes')]
-    private Collection $material;
+    #[ORM\OneToMany(mappedBy: 'brand', targetEntity: Material::class)]
+    private Collection $materials;
 
     public function __construct()
     {
         $this->material = new ArrayCollection();
+        $this->materials = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -64,15 +66,16 @@ class MaterialType
     /**
      * @return Collection<int, Material>
      */
-    public function getMaterial(): Collection
+    public function getMaterials(): Collection
     {
-        return $this->material;
+        return $this->materials;
     }
 
     public function addMaterial(Material $material): self
     {
-        if (!$this->material->contains($material)) {
-            $this->material->add($material);
+        if (!$this->materials->contains($material)) {
+            $this->materials->add($material);
+            $material->setBrand($this);
         }
 
         return $this;
@@ -80,8 +83,15 @@ class MaterialType
 
     public function removeMaterial(Material $material): self
     {
-        $this->material->removeElement($material);
+        if ($this->materials->removeElement($material)) {
+            // set the owning side to null (unless already changed)
+            if ($material->getBrand() === $this) {
+                $material->setBrand(null);
+            }
+        }
 
         return $this;
     }
+
+
 }

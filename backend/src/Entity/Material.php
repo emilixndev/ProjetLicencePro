@@ -3,19 +3,33 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Repository\MaterialRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: MaterialRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new GetCollection(),
+        new Get(),
+    ],
+    normalizationContext: [
+        "groups"=>["read:materials"]
+    ],
+    paginationItemsPerPage: 30
+)]
 class Material
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["read:reservation","read:materials"])]
     private ?int $id = null;
 
     #[ORM\Column]
@@ -25,33 +39,56 @@ class Material
     private ?User $user = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["read:materials"])]
     private ?string $budget = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["read:materials"])]
     private ?string $BCnumber = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(["read:materials"])]
     private ?\DateTimeInterface $deleveryDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Groups(["read:materials"])]
     private ?\DateTimeInterface $endOfGuarantyDate = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["read:materials"])]
     private ?string $InventoryNumber = null;
 
     #[ORM\ManyToOne(inversedBy: 'materials')]
+    #[Groups(["read:materials"])]
     private ?Supplier $supplier = null;
 
     #[ORM\ManyToMany(targetEntity: MaterialType::class, mappedBy: 'material')]
+    #[Groups(["read:materials"])]
     private Collection $materialTypes;
 
     #[ORM\OneToMany(mappedBy: 'material', targetEntity: Reservation::class)]
+    #[Groups(["read:materials"])]
     private Collection $reservations;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(["read:materials",'read:reservation'])]
+    private ?string $name = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\ManyToMany(targetEntity: Brand::class, mappedBy: 'material')]
+    private Collection $brands;
+
+    #[ORM\ManyToOne(inversedBy: 'materials')]
+    #[Groups(["read:materials"])]
+    private ?Brand $brand = null;
 
     public function __construct()
     {
         $this->materialTypes = new ArrayCollection();
         $this->reservations = new ArrayCollection();
+        $this->brands = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -211,4 +248,42 @@ class Material
 
         return $this;
     }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getBrand(): ?Brand
+    {
+        return $this->brand;
+    }
+
+    public function setBrand(?Brand $brand): self
+    {
+        $this->brand = $brand;
+
+        return $this;
+    }
+
+
 }
