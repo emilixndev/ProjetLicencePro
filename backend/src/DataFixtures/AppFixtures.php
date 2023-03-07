@@ -127,6 +127,8 @@ class AppFixtures extends Fixture
                 ->setEmailBorrower($faker->email)
                 ->setStartDate($faker->dateTime)
                 ->setEndDate($faker->dateTime)
+                ->setFirstName($faker->firstName)
+                ->setLastName($faker->lastName)
                 ->setStatutBorrower($faker->randomElement(['Perma','doc','postdoc','etudiant','ext']))
             ;
             $manager->persist($reservation);
