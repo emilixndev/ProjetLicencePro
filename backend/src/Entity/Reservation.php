@@ -45,11 +45,11 @@ class Reservation
     private ?Material $material = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups("read:reservation")]
+    #[Groups(["read:reservation","read:materials"])]
     private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups("read:reservation")]
+    #[Groups(["read:reservation","read:materials"])]
     private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column(length: 255)]

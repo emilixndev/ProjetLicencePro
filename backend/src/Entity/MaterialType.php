@@ -14,20 +14,26 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: MaterialTypeRepository::class)]
 #[ApiResource(
     operations: [
-        new Get(),
         new GetCollection(),
-    ]
+        new Get(),
+    ],
+    normalizationContext: [
+        "groups"=>["read:category"]
+    ],
+    order: [
+        "name" =>'ASC'
+    ],
 )]
 class MaterialType
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["read:materials"])]
+    #[Groups(["read:materials","read:category"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["read:materials"])]
+    #[Groups(["read:materials","read:category"])]
     private ?string $name = null;
 
     #[ORM\ManyToMany(targetEntity: Material::class, inversedBy: 'materialTypes')]

@@ -71,7 +71,7 @@ class Material
     private Collection $reservations;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["read:materials"])]
+    #[Groups(["read:materials",'read:reservation'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -81,6 +81,7 @@ class Material
     private Collection $brands;
 
     #[ORM\ManyToOne(inversedBy: 'materials')]
+    #[Groups(["read:materials"])]
     private ?Brand $brand = null;
 
     public function __construct()
