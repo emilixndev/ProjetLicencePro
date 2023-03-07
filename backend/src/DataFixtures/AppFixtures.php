@@ -86,6 +86,7 @@ class AppFixtures extends Fixture
             $material = new Material();
             $material
                 ->setUser($tabOwner[rand(0,count($tabOwner)-1)])
+                ->setName($faker->word)
                 ->setSupplier($tabSuppliers[rand(0,count($tabSuppliers)-1)])
                 ->addMaterialType($tabMaterialType[rand(0,count($tabMaterialType)-1)])
                 ->setIsAvailable($faker->boolean)

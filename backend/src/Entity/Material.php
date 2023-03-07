@@ -48,6 +48,9 @@ class Material
     #[ORM\OneToMany(mappedBy: 'material', targetEntity: Reservation::class)]
     private Collection $reservations;
 
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
     public function __construct()
     {
         $this->materialTypes = new ArrayCollection();
@@ -208,6 +211,18 @@ class Material
                 $reservation->setMaterial(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }
