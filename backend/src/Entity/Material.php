@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Repository\MaterialRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,16 +16,20 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: MaterialRepository::class)]
 #[ApiResource(
     operations: [
-        new Get(),
         new GetCollection(),
-    ]
+        new Get(),
+    ],
+    normalizationContext: [
+        "groups"=>["read:materials"]
+    ],
+    paginationItemsPerPage: 30
 )]
 class Material
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups("read:reservation")]
+    #[Groups(["read:reservation","read:materials"])]
     private ?int $id = null;
 
     #[ORM\Column]
@@ -34,30 +39,39 @@ class Material
     private ?User $user = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["read:materials"])]
     private ?string $budget = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["read:materials"])]
     private ?string $BCnumber = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(["read:materials"])]
     private ?\DateTimeInterface $deleveryDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Groups(["read:materials"])]
     private ?\DateTimeInterface $endOfGuarantyDate = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["read:materials"])]
     private ?string $InventoryNumber = null;
 
     #[ORM\ManyToOne(inversedBy: 'materials')]
+    #[Groups(["read:materials"])]
     private ?Supplier $supplier = null;
 
     #[ORM\ManyToMany(targetEntity: MaterialType::class, mappedBy: 'material')]
+    #[Groups(["read:materials"])]
     private Collection $materialTypes;
 
     #[ORM\OneToMany(mappedBy: 'material', targetEntity: Reservation::class)]
+    #[Groups(["read:materials"])]
     private Collection $reservations;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["read:materials"])]
     private ?string $name = null;
 
     public function __construct()

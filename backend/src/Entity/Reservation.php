@@ -37,7 +37,7 @@ class Reservation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups("read:reservation")]
+    #[Groups(["read:reservation","read:materials"])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
