@@ -27,7 +27,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     order: [
         "startDate" =>'DESC'
     ],
-    paginationItemsPerPage: 5
+    paginationItemsPerPage: 10
 )]
 #[ApiFilter(
     SearchFilter::class, properties: ["material"=> "exact"]
