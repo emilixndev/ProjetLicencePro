@@ -74,10 +74,20 @@ class Material
     #[Groups(["read:materials"])]
     private ?string $name = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\ManyToMany(targetEntity: Brand::class, mappedBy: 'material')]
+    private Collection $brands;
+
+    #[ORM\ManyToOne(inversedBy: 'materials')]
+    private ?Brand $brand = null;
+
     public function __construct()
     {
         $this->materialTypes = new ArrayCollection();
         $this->reservations = new ArrayCollection();
+        $this->brands = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -249,4 +259,30 @@ class Material
 
         return $this;
     }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getBrand(): ?Brand
+    {
+        return $this->brand;
+    }
+
+    public function setBrand(?Brand $brand): self
+    {
+        $this->brand = $brand;
+
+        return $this;
+    }
+
+
 }
