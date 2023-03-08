@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+*{
+  font-family: 'Ubuntu', sans-serif;
+}
+
 .test {
   color: red;
 }

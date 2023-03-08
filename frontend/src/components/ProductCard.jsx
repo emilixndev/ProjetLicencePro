@@ -2,12 +2,16 @@ import React from "react";
 
 const ProductCard = (props) => {
   return (
-    <div className="card bg-base-100 shadow-xl">
+    <div className="bg-base-100 shadow-xl rounded-t-[16px] rounded-b-[5px]">
       <figure>
-        <img src={props.image} alt="Shoes" />
+        <img
+          className="w-full rounded-t-[16px]"
+          src={props.image}
+          alt="Shoes"
+        />
       </figure>
-      <div className="card-body">
-        <h2 className="card-title">{props.name}</h2>
+      <div className="p-5 flex flex-col gap-2 rounded-b-2 bg-gradient-to-r from-[#EBF4F5] to-[#BFD1EC] rounded-b-[5px]">
+        <h2 className="text-xl font-bold">Casque VR</h2>
         <p>{props.brand}</p>
       </div>
     </div>
