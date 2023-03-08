@@ -12,7 +12,6 @@ php bin/console doctrine:database:create
 ***
 **Chargement des fixtures et installation de la BDD**
 ```
-php bin/console doctrine:migrations:migrate
 php bin/console doctrine:s:u --force
 php bin/console doctrine:fixtures:load
 ```
