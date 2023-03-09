@@ -6,57 +6,67 @@ import SearchBar from "../components/SearchBar";
 import Sidebar from "../components/Sidebar";
 import client from "../services/axios";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 const Home = () => {
   const dataFake = [
     {
+      id: 1,
       name: "Nom matériel",
       brand: "Marque",
       image: "https://picsum.photos/200/150",
       categoryId: 1,
     },
     {
+      id: 2,
       name: "Nom matériel 2",
       brand: "Marque 2",
       image: "https://picsum.photos/200/150",
       categoryId: 0,
     },
     {
+      id: 3,
       name: "Nom matériel 3",
       brand: "Marque 3",
       image: "https://picsum.photos/200/150",
       categoryId: 1,
     },
     {
+      id: 4,
       name: "Nom matériel",
       brand: "Marque",
       image: "https://picsum.photos/200/150",
       categoryId: 1,
     },
     {
+      id: 5,
       name: "Nom matériel 2",
       brand: "Marque 2",
       image: "https://picsum.photos/200/150",
       categoryId: 0,
     },
     {
+      id: 6,
       name: "Nom matériel 3",
       brand: "Marque 3",
       image: "https://picsum.photos/200/150",
       categoryId: 1,
     },
     {
+      id: 7,
       name: "Nom matériel",
       brand: "Marque",
       image: "https://picsum.photos/200/150",
       categoryId: 1,
     },
     {
+      id: 8,
       name: "Nom matériel 2",
       brand: "Marque 2",
       image: "https://picsum.photos/200/150",
       categoryId: 0,
     },
     {
+      id: 9,
       name: "Nom matériel 3",
       brand: "Marque 3",
       image: "https://picsum.photos/200/150",
@@ -107,11 +117,15 @@ const Home = () => {
           <div className="container grid grid-cols-3 gap-16 p-16">
             {dataFake.map((item) => {
               return (
-                <ProductCard
-                  name={item.name}
-                  image={item.image}
-                  brand={item.brand}
-                />
+                <Link to={"/product/" + item.id}>
+                  {" "}
+                  {/**A remplacer par un id */}
+                  <ProductCard
+                    name={item.name}
+                    image={item.image}
+                    brand={item.brand}
+                  />
+                </Link>
               );
             })}
           </div>
