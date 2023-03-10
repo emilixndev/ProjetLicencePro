@@ -56,11 +56,8 @@ const Sidebar = () => {
           <ul className={`${openCat ? "block" : "hidden"}`}>
             {categories.map((item) => {
               return (
-                <div className="form-control">
-                  <label
-                    key={item.id}
-                    className="label cursor-pointer justify-start gap-2"
-                  >
+                <div className="form-control" key={item.id}>
+                  <label className="label cursor-pointer justify-start gap-2">
                     <input
                       type="checkbox"
                       className="checkbox checkbox-primary"
@@ -93,11 +90,8 @@ const Sidebar = () => {
           <ul className={`${openBrand ? "block" : "hidden"} px-4`}>
             {brands.map((item) => {
               return (
-                <div className="form-control">
-                  <label
-                    key={item.id}
-                    className="label cursor-pointer justify-start gap-2"
-                  >
+                <div className="form-control" key={item.id}>
+                  <label className="label cursor-pointer justify-start gap-2">
                     <input
                       type="checkbox"
                       className="checkbox checkbox-primary"
