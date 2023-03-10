@@ -3,7 +3,7 @@ const getHeadersKeys = () => {
   return {
     Accept: "application/ld+json",
     "Content-Type": "application/ld+json",
-    "Access-Control-Allow-Credentials": true,
+    "Access-Control-Allow-Credentials": false,
   };
 };
 export const client = () => {
