@@ -29,10 +29,9 @@ class EntitySubscriber implements EventSubscriber
 
     public function postPersist(LifecycleEventArgs $args)
     {
-
         $entity = $args->getObject();
         if($entity instanceof Reservation){
-
+            dd("gfkdhfgkfd");
             $this->emailservice->sendConfirmationReservation($entity);
         }
     }

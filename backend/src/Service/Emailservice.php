@@ -20,7 +20,9 @@ class Emailservice
     public function sendConfirmationReservation(
         Reservation $reservation,
     )
+
     {
+        $owner = $reservation->getMaterial()->getUser();
 
         $body = [
             'Messages' => [
@@ -36,15 +38,17 @@ class Emailservice
                     ],
                     'TemplateID' => 4645698,
                     'Subject' => "Réservation matériel",
-//                    'Variables' => [
-//                        'title' => $title,
-//                        'content' => $content
-//                    ],
+                    'Variables' => [
+                        'FirstNameOwner' => $owner->getFirstName(),
+                        'lastNameOwner' => $owner->getLastName(),
+                        'tel' => $owner->getTel(),
+                        'email' => $owner->getEmail(),
+                    ],
                 ],
             ]
         ];
-            $this->mj->post(Resources::$Email, ['body' => $body]);
-
+//            $reponse = $this->mj->post(Resources::$Email, ['body' => $body]);
+//            $reponse->success();
     }
 
 

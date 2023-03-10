@@ -34,6 +34,9 @@ class AppFixtures extends Fixture
         $user
             ->setPassword(password_hash("test",PASSWORD_DEFAULT))
             ->setEmail("test@gmail.com")
+            ->setFirstName($faker->firstName)
+            ->setLastName($faker->lastName)
+            ->setTel($faker->phoneNumber)
             ->setRoles(["ROLE_ADMIN"]);
         $manager->persist($user);
 
@@ -42,16 +45,21 @@ class AppFixtures extends Fixture
             $user
                 ->setPassword($faker->password)
                 ->setEmail($faker->email)
+                ->setFirstName($faker->firstName)
+                ->setLastName($faker->lastName)
+                ->setTel($faker->phoneNumber)
                 ->setRoles(["ROLE_ADMIN"]);
             $manager->persist($user);
         }
 
         for ($i = 0; $i < 30; $i++) {
-
             $user = new User();
             $user
                 ->setPassword($faker->password)
                 ->setEmail($faker->email)
+                ->setFirstName($faker->firstName)
+                ->setLastName($faker->lastName)
+                ->setTel($faker->phoneNumber)
                 ->setRoles(["ROLE_OWNER"]);
             $tabOwner [] = $user;
 
@@ -133,9 +141,9 @@ class AppFixtures extends Fixture
             ;
             $manager->persist($reservation);
         }
-
-
-        $manager->flush();
+dd("Enlever les emails lors des fixtures");
+//TODO ENLEVER EMAIL QUAND ON LANCE FIXTURES
+//        $manager->flush();
     }
 
 
