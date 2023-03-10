@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller\Admin;
-
+use Doctrine\ORM\QueryBuilder;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,10 +11,21 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
+use Symfony\Component\Security\Core\Security;
+
+
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+
+
+
 
 class UserCrudController extends AbstractCrudController
 {
     private $entityManager;
+    private $security;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -62,43 +73,18 @@ class UserCrudController extends AbstractCrudController
     }
 
 
-    
-    public function configureQuery($query): ?callable
-    {
-        $user = $this->getUser();
-    
-        if (in_array('ROLE_ADMIN', $user->getRoles())) {
-            return null;
-        }
-    
-        return function (EntityRepository $repository) use ($user) {
-            return $repository->createQueryBuilder('u')
-                ->where('u.email = :email')
-                ->setParameter('email', $user->getEmail())
-                ->getQuery();
-        };
-    }
-
-
-
 
     public function configureFields(string $pageName): iterable
 {
-    yield IdField::new('id')->hideOnForm();
+    yield IdField::new('id')->hideOnForm()->hideOnIndex();
     yield TextField::new('email');
-    yield TextField::new('password');
+    yield TextField::new('password')->hideOnIndex();;
     yield ChoiceField::new('roles')->setChoices([
         'Admin' => 'ROLE_ADMIN',
         'Owner' => 'ROLE_OWNER',
     ])->allowMultipleChoices();
     // ...
 }
-
-
-
-
-
-
 
 
 }

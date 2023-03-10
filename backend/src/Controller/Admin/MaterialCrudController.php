@@ -14,6 +14,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
@@ -49,13 +50,11 @@ public function __construct(EntityManagerInterface $entityManager, Security $sec
 
 
 
-        yield IdField::new('id')->hideOnForm();
+        yield IdField::new('id')->hideOnForm()->hideOnIndex();;
         yield TextField::new('name');
+        yield TextareaField::new('description')->hideOnIndex();
         yield BooleanField::new('isAvailable');
-        $proprietaireField = AssociationField::new('user', 'Propriétaire')
-        ->formatValue(function ($value, $entity) {
-            return $entity->getUser()->getEmail();
-        });
+        $proprietaireField = AssociationField::new('user', 'Propriétaire');
 
         if ($isEditableByAdmin) {
             yield $proprietaireField
@@ -78,6 +77,7 @@ public function __construct(EntityManagerInterface $entityManager, Security $sec
             return $entity->getSupplier()->getName();
         });;
         yield AssociationField::new('reservations', 'Reservations')->hideOnForm();
+        yield AssociationField::new('brand', 'Marque');
         yield AssociationField::new('materialTypes', 'Type de matériel')
         ->formatValue(function ($value, $entity) {
             $types = [];
