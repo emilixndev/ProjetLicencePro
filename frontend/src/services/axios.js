@@ -1,8 +1,8 @@
 import axios from "axios";
 const getHeadersKeys = () => {
   return {
-    Accept: "application/ld+json",
-    "Content-Type": "application/ld+json",
+    Accept: "application/json",
+    "Content-Type": "application/json",
     "Access-Control-Allow-Credentials": false,
   };
 };

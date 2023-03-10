@@ -7,11 +7,11 @@ const ProductCard = (props) => {
         <img
           className="w-full rounded-t-[16px]"
           src={props.image}
-          alt="Shoes"
+          alt={props.image}
         />
       </figure>
       <div className="p-5 flex flex-col gap-2 rounded-b-2 bg-gradient-to-r from-[#EBF4F5] to-[#BFD1EC] rounded-b-[5px]">
-        <h2 className="text-xl font-bold">Casque VR</h2>
+        <h2 className="text-xl font-bold">{props.image}</h2>
         <p>{props.brand}</p>
       </div>
     </div>
