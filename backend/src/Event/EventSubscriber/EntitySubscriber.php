@@ -31,8 +31,8 @@ class EntitySubscriber implements EventSubscriber
     {
         $entity = $args->getObject();
         if($entity instanceof Reservation){
-            dd("gfkdhfgkfd");
             $this->emailservice->sendConfirmationReservation($entity);
+            $this->emailservice->sendNotificationOwner($entity);
         }
     }
 }
