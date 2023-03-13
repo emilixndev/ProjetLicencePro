@@ -94,4 +94,8 @@ class Brand
     }
 
 
+    public function __toString(): string
+    {
+        return $this->name;
+    }
 }
