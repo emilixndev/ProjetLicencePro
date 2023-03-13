@@ -139,7 +139,7 @@ class AppFixtures extends Fixture
                 ->setLastName($faker->lastName)
                 ->setStatutBorrower($faker->randomElement(['Perma','doc','postdoc','etudiant','ext']))
             ;
-            $manager->persist($reservation);
+//            $manager->persist($reservation);
         }
 dd("Enlever les emails lors des fixtures");
 //TODO ENLEVER EMAIL QUAND ON LANCE FIXTURES
