@@ -38,12 +38,12 @@ const Sidebar = () => {
   };
 
   return (
-    <ul className="bg-base-100 w-56 shadow-xl pt-[50px] fixed h-full mt-16">
+    <ul className=" w-56 shadow-xl pt-[50px] fixed h-full mt-16">
       <li className="text-xs text-gray-400 px-4">Filtrer par</li>
       <hr className="my-2" />
       <li className="overflow-auto max-h-96">
         <div
-          className="flex items-center justify-between px-4 sticky bg-white top-0"
+          className="flex items-center justify-between px-4 sticky bg-[#FAFAFA] top-0"
           onClick={toggleCat}
         >
           <p className="text-base">Catégorie</p>
@@ -77,7 +77,7 @@ const Sidebar = () => {
       </li>
       <li className="overflow-auto max-h-96">
         <div
-          className="flex items-center justify-between sticky bg-white top-0 px-4"
+          className="flex items-center justify-between sticky bg-[#FAFAFA] top-0 px-4"
           onClick={toggleBrand}
         >
           <p className="text-base">Marque</p>
