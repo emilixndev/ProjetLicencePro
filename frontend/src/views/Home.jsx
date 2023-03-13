@@ -6,6 +6,8 @@ import client from "../services/axios";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Pagination from "../components/Pagination";
+import { useRecoilState } from "recoil";
+import { productsState } from "../features/Products";
 const Home = () => {
   const [materials, setMaterials] = useState([]);
   const [pages, setPages] = useState([]);
@@ -16,12 +18,14 @@ const Home = () => {
     var endIndex = Math.min((pageIndex + 1) * pageSize, a.length);
     return a.slice(Math.max(endIndex - pageSize, 0), endIndex);
   }
+  const [products, setProducts] = useRecoilState(productsState);
 
   const fetchProducts = async () => {
     try {
       const res = await client().get("materials");
       console.log("fetched Products", res.data);
-      setMaterials(res.data);
+      // setMaterials(res.data);
+      setProducts(res.data);
 
       const numPages = Math.ceil(res.data.length / 9);
       setNumberOfPages(numPages);
@@ -42,7 +46,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="p-3 bg-[#FAFAFA]">
+    <div className="p-3 bg-[#FAFAFA] min-h-screen">
       <Navbar />
       <div id="wrapper" className="flex">
         <Sidebar />
