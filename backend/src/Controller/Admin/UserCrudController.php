@@ -58,27 +58,13 @@ class UserCrudController extends AbstractCrudController
         }
 
     }
-    public function configureActions(Actions $actions): Actions
-    {
-        $user = $this->getUser();
-    
-        // Vérifier si l'utilisateur connecté a le rôle "ROLE_ADMIN"
-        if (in_array('ROLE_ADMIN', $user->getRoles())) {
-            return $actions;
-        }
-    
-        // Si l'utilisateur n'a pas le rôle "ROLE_ADMIN", supprimer l'action "Nouveau"
-        return $actions
-            ->disable(Action::NEW);
-    }
+
 
 
 
     public function configureFields(string $pageName): iterable
 {
-    yield IdField::new('id')->hideOnForm()->hideOnIndex();
     yield TextField::new('email');
-    yield TextField::new('password')->hideOnIndex();;
     yield ChoiceField::new('roles')->setChoices([
         'Admin' => 'ROLE_ADMIN',
         'Owner' => 'ROLE_OWNER',

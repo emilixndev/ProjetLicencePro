@@ -39,9 +39,7 @@ class MaterialType
     #[ORM\ManyToMany(targetEntity: Material::class, inversedBy: 'materialTypes')]
     private Collection $material;
 
-    #[ORM\Column(length: 255)]
-    #[Groups(["read:materials","read:category"])]
-    private ?string $imgPath = null;
+
 
     public function __construct()
     {
@@ -89,17 +87,7 @@ class MaterialType
         return $this;
     }
 
-    public function getImgPath(): ?string
-    {
-        return $this->imgPath;
-    }
 
-    public function setImgPath(string $imgPath): self
-    {
-        $this->imgPath = $imgPath;
-
-        return $this;
-    }
 
     public function __toString(): string
     {

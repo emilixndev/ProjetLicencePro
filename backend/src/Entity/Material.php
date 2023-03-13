@@ -340,4 +340,23 @@ class Material
         return $this->name;
     }
 
+    public function getExportedData(){
+        return[
+            'id'=>$this->id,
+            'Nom'=>$this->name,
+            'Description'=>$this->description,
+            'Bc Number'=>$this->BCnumber,
+            'Date de livraison'=>date_format($this->deleveryDate, 'Y-m-d'),
+            'Date de fin de garantie'=>date_format($this->endOfGuarantyDate, 'Y-m-d'),
+            'Numero inventaire'=>$this->InventoryNumber,
+            'Marque'=>$this->brand->getName(),
+            'Budget'=>$this->budget->getName(),
+            'Fournisseur'=>$this->supplier->getName(),
+            'Proprietaire'=>$this->user->getFirstName()." ".$this->user->getLastName(),
+
+
+
+        ];
+    }
+
 }
