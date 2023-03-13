@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 use App\Entity\Brand;
+use App\Entity\Budget;
 use App\Entity\Material;
 use App\Entity\MaterialType;
 use App\Entity\Reservation;
@@ -24,6 +25,9 @@ class AppFixtures extends Fixture
         $tabSuppliers= [];
         $tabMaterialType = [];
         $tabBrands = [];
+        $tabBudget = [];
+
+
 
 
 
@@ -82,9 +86,20 @@ class AppFixtures extends Fixture
 
         for ($i = 0; $i < 20; $i++) {
 
+            $Budget = new Budget();
+            $Budget
+                ->setName($faker->word)
+                ->setDescription($faker->text)
+            ;
+            $tabBudget [] = $Budget;
+            $manager->persist($Budget);
+        }
+        for ($i = 0; $i < 10; $i++) {
+
             $materialType = new MaterialType();
             $materialType
                 ->setName($faker->word)
+                ->setImgPath("")
             ;
             $tabMaterialType [] = $materialType;
             $manager->persist($materialType);
@@ -109,11 +124,11 @@ class AppFixtures extends Fixture
                 ->setUser($tabOwner[rand(0,count($tabOwner)-1)])
                 ->setName($faker->word)
                 ->setDescription($faker->sentence)
+                ->setBudget($tabBudget[rand(0,count($tabBudget)-1)])
                 ->setSupplier($tabSuppliers[rand(0,count($tabSuppliers)-1)])
                 ->addMaterialType($tabMaterialType[rand(0,count($tabMaterialType)-1)])
                 ->setBrand($tabBrands[rand(0,count($tabBrands)-1)])
                 ->setIsAvailable($faker->boolean)
-                ->setBudget($faker->word)
                 ->setBCnumber($faker->randomNumber(8,true))
                 ->setDeleveryDate($faker->dateTime)
                 ->setEndOfGuarantyDate($faker->dateTime)

@@ -40,10 +40,6 @@ class Material
 
     #[ORM\Column(length: 255)]
     #[Groups(["read:materials"])]
-    private ?string $budget = null;
-
-    #[ORM\Column(length: 255)]
-    #[Groups(["read:materials"])]
     private ?string $BCnumber = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -84,11 +80,22 @@ class Material
     #[Groups(["read:materials"])]
     private ?Brand $brand = null;
 
+    #[ORM\OneToMany(mappedBy: 'Material', targetEntity: ImgMaterial::class)]
+    #[Groups(["read:materials"])]
+    private Collection $imgMaterials;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $link = null;
+
+    #[ORM\ManyToOne(inversedBy: 'Material')]
+    private ?Budget $budget = null;
+
     public function __construct()
     {
         $this->materialTypes = new ArrayCollection();
         $this->reservations = new ArrayCollection();
         $this->brands = new ArrayCollection();
+        $this->imgMaterials = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -120,17 +127,7 @@ class Material
         return $this;
     }
 
-    public function getBudget(): ?string
-    {
-        return $this->budget;
-    }
 
-    public function setBudget(string $budget): self
-    {
-        $this->budget = $budget;
-
-        return $this;
-    }
 
     public function getBCnumber(): ?string
     {
@@ -281,6 +278,60 @@ class Material
     public function setBrand(?Brand $brand): self
     {
         $this->brand = $brand;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ImgMaterial>
+     */
+    public function getImgMaterials(): Collection
+    {
+        return $this->imgMaterials;
+    }
+
+    public function addImgMaterial(ImgMaterial $imgMaterial): self
+    {
+        if (!$this->imgMaterials->contains($imgMaterial)) {
+            $this->imgMaterials->add($imgMaterial);
+            $imgMaterial->setMaterial($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImgMaterial(ImgMaterial $imgMaterial): self
+    {
+        if ($this->imgMaterials->removeElement($imgMaterial)) {
+            // set the owning side to null (unless already changed)
+            if ($imgMaterial->getMaterial() === $this) {
+                $imgMaterial->setMaterial(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getLink(): ?string
+    {
+        return $this->link;
+    }
+
+    public function setLink(?string $link): self
+    {
+        $this->link = $link;
+
+        return $this;
+    }
+
+    public function getBudget(): ?Budget
+    {
+        return $this->budget;
+    }
+
+    public function setBudget(?Budget $budget): self
+    {
+        $this->budget = $budget;
 
         return $this;
     }
