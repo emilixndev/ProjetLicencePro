@@ -18,8 +18,22 @@ const Home = () => {
     var endIndex = Math.min((pageIndex + 1) * pageSize, a.length);
     return a.slice(Math.max(endIndex - pageSize, 0), endIndex);
   }
-  const [products, setProducts] = useRecoilState(productsState);
-
+  const nextPage = () => {
+    if (pageIndex < numberOfPages - 1) {
+      console.log("next page", pageIndex);
+      setPageIndex(pageIndex + 1);
+    }
+  };
+  const prevPage = () => {
+    if (pageIndex > 0) {
+      console.log("prev page", pageIndex);
+      setPageIndex(pageIndex - 1);
+    }
+  };
+  const selectPage = (index) => {
+    console.log("select page", parseInt(index.target.innerText));
+    setPageIndex(parseInt(index.target.innerText, 10));
+  };
   const fetchProducts = async () => {
     try {
       const res = await client().get("materials");
@@ -46,7 +60,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="p-3 bg-[#FAFAFA] min-h-screen">
+    <div className="p-3 bg-[#FAFAFA] h-screen">
       <Navbar />
       <div id="wrapper" className="flex">
         <Sidebar />
@@ -72,11 +86,10 @@ const Home = () => {
           </div>
           <Pagination
             numberOfPages={numberOfPages}
-            nextPage={() => {
-              numberOfPages++;
-              console.log("verif");
-            }}
-            prevPage={() => numberOfPages--}
+            nextPage={nextPage}
+            prevPage={prevPage}
+            selectPage={selectPage}
+            activePage={pageIndex}
           />
         </main>
       </div>
