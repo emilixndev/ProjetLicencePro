@@ -68,7 +68,7 @@ public function __construct(EntityManagerInterface $entityManager, Security $sec
                 ->setFormTypeOption('data', $this->getUser());
         }
 
-        yield TextField::new('budget');
+        yield AssociationField::new('budget');
         yield TextField::new('BCnumber','BC number');
         yield DateField::new('deleveryDate');
         yield DateField::new('endOfGuarantyDate');

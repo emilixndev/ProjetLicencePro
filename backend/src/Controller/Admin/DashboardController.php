@@ -35,6 +35,8 @@ class DashboardController extends AbstractDashboardController
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+        yield MenuItem::linkToRoute('Changer de mot de passe', 'fa fa-lock','resetUserPassword');
+
 
         if($isAdmin){
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', User::class);
