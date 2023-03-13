@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\User;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -59,7 +60,18 @@ class UserCrudController extends AbstractCrudController
 
     }
 
+    public function configureActions(Actions $actions): Actions
+    {
+        $impersonate = Action::new('impersonate', 'Impersonate')
+            ->linkToUrl(function (User $user): string {
+                return '?_switch_user=' . $user->getEmail();
+            });
+        if($this->isGranted("ROLE_ADMIN")){
+            $actions->add(Crud::PAGE_INDEX,$impersonate);
+        }
 
+        return $actions;
+    }
 
 
     public function configureFields(string $pageName): iterable
