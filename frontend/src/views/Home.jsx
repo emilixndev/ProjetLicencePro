@@ -14,6 +14,8 @@ const Home = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [numberOfPages, setNumberOfPages] = useState(0);
 
+  const [products, setProducts] = useRecoilState(productsState);
+
   function paginate(a, pageIndex, pageSize) {
     var endIndex = Math.min((pageIndex + 1) * pageSize, a.length);
     return a.slice(Math.max(endIndex - pageSize, 0), endIndex);
@@ -60,7 +62,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="p-3 bg-[#FAFAFA] h-screen">
+    <div className="p-3 bg-[#FAFAFA] min-h-screen">
       <Navbar />
       <div id="wrapper" className="flex">
         <Sidebar />
