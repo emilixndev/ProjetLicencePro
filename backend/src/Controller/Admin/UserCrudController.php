@@ -15,7 +15,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
-use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 use Symfony\Component\Security\Core\Security;
 
 
@@ -28,7 +27,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 class UserCrudController extends AbstractCrudController
 {
     private $entityManager;
-    private $security;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -114,6 +112,17 @@ class UserCrudController extends AbstractCrudController
         yield TextField::new('tel');
 
 
+    }
+
+
+    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
+    {
+
+        if($this->isGranted("ROLE_ADMIN")){
+            return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+
+        }
+        throw new \Exception("Non autorisé");
     }
 
 
