@@ -1,7 +1,10 @@
 <?php
 
 namespace App\Controller\Admin;
+
+use App\Entity\ImgMaterial;
 use App\Entity\Material;
+use App\Form\MaterialImgType;
 use App\Repository\UserRepository;
 use App\Service\csvGenerator;
 use Doctrine\ORM\QueryBuilder;
@@ -41,19 +44,27 @@ class MaterialCrudController extends AbstractCrudController
 {
 
 
-
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private Security $security,
-        private readonly AdminContextProvider   $adminContextProvider,
-        private csvGenerator $csvGenerator,
+        private EntityManagerInterface        $entityManager,
+        private Security                      $security,
+        private readonly AdminContextProvider $adminContextProvider,
+        private csvGenerator                  $csvGenerator,
     )
     {
     }
 
+    public function configureCrud(Crud $crud): Crud
+    {
+        $crud
+            ->showEntityActionsInlined(true);
+
+        return $crud;
+
+    }
+
     public function configureFilters(Filters $filters): Filters
     {
-        if($this->isGranted("ROLE_ADMIN")){
+        if ($this->isGranted("ROLE_ADMIN")) {
             $filters->add('user');
         }
         $filters
@@ -66,8 +77,7 @@ class MaterialCrudController extends AbstractCrudController
             ->add('InventoryNumber')
             ->add('supplier')
             ->add('brands')
-            ->add('materialTypes')
-        ;
+            ->add('materialTypes');
         return $filters;
     }
 
@@ -86,6 +96,7 @@ class MaterialCrudController extends AbstractCrudController
             ->createAsGlobalAction();
 
         $actions
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
             ->add(Crud::PAGE_INDEX, $exportXlsx);
         return $actions;
     }
@@ -99,41 +110,50 @@ class MaterialCrudController extends AbstractCrudController
         yield AssociationField::new('supplier', 'Fournisseur')->formatValue(function ($value, $entity) {
             return $entity->getSupplier()->getName();
         });;
-        if($this->isGranted("ROLE_ADMIN")){
+        if ($this->isGranted("ROLE_ADMIN")) {
             yield AssociationField::new('user', 'Propriétaire');
         }
-        if(!$this->isGranted("ROLE_ADMIN")){
+        if (!$this->isGranted("ROLE_ADMIN")) {
             yield AssociationField::new('user', 'Propriétaire')
                 ->setFormTypeOptions(['query_builder' => function (UserRepository $em) {
-                    if (!$this->isGranted('ROLE_ADMIN')){
+                    if (!$this->isGranted('ROLE_ADMIN')) {
                         return $em->createQueryBuilder('user')
                             ->andWhere('user.email = :email')
                             ->setParameter('email', $this->getUser()->getEmail());
 
                     }
-                    return  $em->createQueryBuilder('user');
+                    return $em->createQueryBuilder('user');
                 }])->onlyOnForms();
         }
+
+        yield CollectionField::new('ImgMaterials')
+            ->setEntryType(MaterialImgType::class)
+            ->onlyOnForms();
+        yield CollectionField::new('ImgMaterials')
+            ->onlyOnDetail()
+            ->setTemplatePath("backend/custom/imgMaterials.html.twig");
+
 
         yield DateField::new('deleveryDate');
         yield DateField::new('endOfGuarantyDate');
 
         yield AssociationField::new('brand', 'Marque');
         yield AssociationField::new('materialTypes', 'Type de matériel')
-        ->formatValue(function ($value, $entity) {
-            $types = [];
-            foreach ($entity->getMaterialTypes() as $type) {
-                $types[] = $type->getName();
-            }
-            return implode(', ', $types);
-        })
-        ->setCrudController(MaterialTypeCrudController::class)->setFormTypeOption('by_reference', false);
+            ->formatValue(function ($value, $entity) {
+                $types = [];
+                foreach ($entity->getMaterialTypes() as $type) {
+                    $types[] = $type->getName();
+                }
+                return implode(', ', $types);
+            })
+            ->setCrudController(MaterialTypeCrudController::class)->setFormTypeOption('by_reference', false);
         yield AssociationField::new('budget');
 
         yield TextField::new('InventoryNumber');
 
-        yield TextField::new('BCnumber','BC number');
+        yield TextField::new('BCnumber', 'BC number');
     }
+
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
         $response = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
@@ -144,7 +164,6 @@ class MaterialCrudController extends AbstractCrudController
 
         return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
     }
-
 
 
     public function exportCSV(FilterFactory $filterFactory)
@@ -159,14 +178,13 @@ class MaterialCrudController extends AbstractCrudController
             $context->getSearch(), $context->getEntity(), $fields, $filters
         )
             ->getQuery()->getResult();
-        $materialsFormated = [] ;
+        $materialsFormated = [];
         /** @var Material $material */
-        foreach ($materials as $material){
+        foreach ($materials as $material) {
             $materialsFormated [] = $material->getExportedData();
         }
-        return $this->csvGenerator->export($materialsFormated,"export_".date("Y-m-d").".csv");
+        return $this->csvGenerator->export($materialsFormated, "export_" . date("Y-m-d") . ".csv");
     }
-
 
 
 }

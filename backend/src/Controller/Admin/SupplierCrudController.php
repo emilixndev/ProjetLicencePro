@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Supplier;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
@@ -24,8 +25,7 @@ class SupplierCrudController extends AbstractCrudController
             ->add('postalCode')
             ->add('city')
             ->add('email')
-            ->add('phone')
-        ;
+            ->add('phone');
 
 
         return $filters;
@@ -35,13 +35,22 @@ class SupplierCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
 
-            yield TextField::new('name');
-            yield TextField::new('address');
-            yield TextField::new('postalCode');
-            yield TextField::new('city');
-            yield EmailField::new('email');
-            yield TextField::new('phone');
+        yield TextField::new('name');
+        yield TextField::new('address');
+        yield TextField::new('postalCode');
+        yield TextField::new('city');
+        yield EmailField::new('email');
+        yield TextField::new('phone');
 
+
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        $crud
+            ->showEntityActionsInlined(true);
+
+        return $crud;
 
     }
 }

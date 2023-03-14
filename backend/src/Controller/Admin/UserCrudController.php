@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller\Admin;
+
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -22,8 +23,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
-
-
 
 
 class UserCrudController extends AbstractCrudController
@@ -52,7 +51,13 @@ class UserCrudController extends AbstractCrudController
         $this->hashPassword($entityInstance);
         parent::updateEntity($entityManager, $entityInstance);
     }
+    public function configureCrud(Crud $crud): Crud
+    {
+        $crud
+            ->showEntityActionsInlined(true);
+        return $crud;
 
+    }
     private function hashPassword($entity)
     {
         $plainPassword = $entity->getPassword();
@@ -66,16 +71,16 @@ class UserCrudController extends AbstractCrudController
     public function configureFilters(Filters $filters): Filters
     {
 
-        $filters ->add("email")
-                ->add(ChoiceFilter::new('roles')->setChoices(
-                    [
-                        'Admin' => 'ROLE_ADMIN',
-                        'Owner' => 'ROLE_OWNER',
-                    ]
-                ))
-                ->add('firstName')
-                ->add('lastName')
-                ->add('tel');
+        $filters->add("email")
+            ->add(ChoiceFilter::new('roles')->setChoices(
+                [
+                    'Admin' => 'ROLE_ADMIN',
+                    'Owner' => 'ROLE_OWNER',
+                ]
+            ))
+            ->add('firstName')
+            ->add('lastName')
+            ->add('tel');
 
 
         return $filters;
@@ -87,8 +92,8 @@ class UserCrudController extends AbstractCrudController
             ->linkToUrl(function (User $user): string {
                 return '?_switch_user=' . $user->getEmail();
             });
-        if($this->isGranted("ROLE_ADMIN")){
-            $actions->add(Crud::PAGE_INDEX,$impersonate);
+        if ($this->isGranted("ROLE_ADMIN")) {
+            $actions->add(Crud::PAGE_INDEX, $impersonate);
         }
 
         return $actions;
@@ -96,20 +101,20 @@ class UserCrudController extends AbstractCrudController
 
 
     public function configureFields(string $pageName): iterable
-{
-    yield EmailField::new('email');
+    {
+        yield EmailField::new('email');
 
-    yield TextField::new('password')->onlyWhenCreating();
-    yield ChoiceField::new('roles')->setChoices([
-        'Admin' => 'ROLE_ADMIN',
-        'Owner' => 'ROLE_OWNER',
-    ])->allowMultipleChoices();
-    yield TextField::new('firstname');
-    yield TextField::new('lastname');
-    yield TextField::new('tel');
+        yield TextField::new('password')->onlyWhenCreating();
+        yield ChoiceField::new('roles')->setChoices([
+            'Admin' => 'ROLE_ADMIN',
+            'Owner' => 'ROLE_OWNER',
+        ])->allowMultipleChoices();
+        yield TextField::new('firstname');
+        yield TextField::new('lastname');
+        yield TextField::new('tel');
 
 
-}
+    }
 
 
 }

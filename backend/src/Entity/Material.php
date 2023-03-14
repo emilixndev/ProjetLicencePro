@@ -80,7 +80,7 @@ class Material
     #[Groups(["read:materials"])]
     private ?Brand $brand = null;
 
-    #[ORM\OneToMany(mappedBy: 'Material', targetEntity: ImgMaterial::class)]
+    #[ORM\OneToMany(mappedBy: 'Material', targetEntity: ImgMaterial::class, cascade: ['persist','remove'],orphanRemoval: true)]
     #[Groups(["read:materials"])]
     private Collection $imgMaterials;
 
@@ -353,9 +353,6 @@ class Material
             'Budget'=>$this->budget->getName(),
             'Fournisseur'=>$this->supplier->getName(),
             'Proprietaire'=>$this->user->getFirstName()." ".$this->user->getLastName(),
-
-
-
         ];
     }
 
