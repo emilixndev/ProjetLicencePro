@@ -29,6 +29,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 
 
+use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
 use http\Client\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -45,17 +47,27 @@ class MaterialCrudController extends AbstractCrudController
         private Security $security,
         private readonly AdminContextProvider   $adminContextProvider,
         private csvGenerator $csvGenerator,
-
     )
     {
     }
 
     public function configureFilters(Filters $filters): Filters
     {
-        $filters->add("name");
-        $filters->add("BCnumber");
-
-
+        if($this->isGranted("ROLE_ADMIN")){
+            $filters->add('user');
+        }
+        $filters
+            ->add("name")
+            ->add("BCnumber")
+            ->add(BooleanFilter::new('isAvaible'))
+            ->add('budget')
+            ->add(DateTimeFilter::new('deleveryDate'))
+            ->add(DateTimeFilter::new('endOfGuarantyDate'))
+            ->add('InventoryNumber')
+            ->add('supplier')
+            ->add('brands')
+            ->add('materialTypes')
+        ;
         return $filters;
     }
 
@@ -75,44 +87,37 @@ class MaterialCrudController extends AbstractCrudController
 
         $actions
             ->add(Crud::PAGE_INDEX, $exportXlsx);
-
-
         return $actions;
     }
 
 
     public function configureFields(string $pageName): iterable
     {
-
-        $isEditableByAdmin = $this->isGranted('ROLE_ADMIN');
-
-
-
-        yield IdField::new('id')->hideOnForm()->hideOnIndex();;
+        yield BooleanField::new('isAvailable');
         yield TextField::new('name');
         yield TextareaField::new('description')->hideOnIndex();
-        yield BooleanField::new('isAvailable');
-        yield AssociationField::new('user', 'Propriétaire')
-            ->setFormTypeOptions(['query_builder' => function (UserRepository $em) {
-                if (!$this->isGranted('ROLE_ADMIN')){
-                    return $em->createQueryBuilder('user')
-                        ->andWhere('user.email = :email')
-                        ->setParameter('email', $this->getUser()->getEmail());
-
-                }
-                return  $em->createQueryBuilder('user');
-            }]);
-
-
-        yield AssociationField::new('budget');
-        yield TextField::new('BCnumber','BC number');
-        yield DateField::new('deleveryDate');
-        yield DateField::new('endOfGuarantyDate');
-        yield TextField::new('InventoryNumber');
         yield AssociationField::new('supplier', 'Fournisseur')->formatValue(function ($value, $entity) {
             return $entity->getSupplier()->getName();
         });;
-        yield AssociationField::new('reservations', 'Reservations')->hideOnForm();
+        if($this->isGranted("ROLE_ADMIN")){
+            yield AssociationField::new('user', 'Propriétaire');
+        }
+        if(!$this->isGranted("ROLE_ADMIN")){
+            yield AssociationField::new('user', 'Propriétaire')
+                ->setFormTypeOptions(['query_builder' => function (UserRepository $em) {
+                    if (!$this->isGranted('ROLE_ADMIN')){
+                        return $em->createQueryBuilder('user')
+                            ->andWhere('user.email = :email')
+                            ->setParameter('email', $this->getUser()->getEmail());
+
+                    }
+                    return  $em->createQueryBuilder('user');
+                }])->onlyOnForms();
+        }
+
+        yield DateField::new('deleveryDate');
+        yield DateField::new('endOfGuarantyDate');
+
         yield AssociationField::new('brand', 'Marque');
         yield AssociationField::new('materialTypes', 'Type de matériel')
         ->formatValue(function ($value, $entity) {
@@ -123,7 +128,11 @@ class MaterialCrudController extends AbstractCrudController
             return implode(', ', $types);
         })
         ->setCrudController(MaterialTypeCrudController::class)->setFormTypeOption('by_reference', false);
-        
+        yield AssociationField::new('budget');
+
+        yield TextField::new('InventoryNumber');
+
+        yield TextField::new('BCnumber','BC number');
     }
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {

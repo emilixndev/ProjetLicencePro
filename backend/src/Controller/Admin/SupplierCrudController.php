@@ -3,7 +3,9 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Supplier;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 
@@ -14,18 +16,32 @@ class SupplierCrudController extends AbstractCrudController
         return Supplier::class;
     }
 
-    
+    public function configureFilters(Filters $filters): Filters
+    {
+        $filters
+            ->add('name')
+            ->add('address')
+            ->add('postalCode')
+            ->add('city')
+            ->add('email')
+            ->add('phone')
+        ;
+
+
+        return $filters;
+    }
+
+
     public function configureFields(string $pageName): iterable
     {
 
             yield TextField::new('name');
-            yield TextField::new('adress');
+            yield TextField::new('address');
             yield TextField::new('postalCode');
             yield TextField::new('city');
-            yield TextField::new('email');
+            yield EmailField::new('email');
             yield TextField::new('phone');
-            yield AssociationField::new('materials', 'Matériels');
-      
+
 
     }
 }

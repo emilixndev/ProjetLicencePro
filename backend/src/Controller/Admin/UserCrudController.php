@@ -4,13 +4,16 @@ namespace App\Controller\Admin;
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 use Symfony\Component\Security\Core\Security;
 
@@ -60,6 +63,24 @@ class UserCrudController extends AbstractCrudController
 
     }
 
+    public function configureFilters(Filters $filters): Filters
+    {
+
+        $filters ->add("email")
+                ->add(ChoiceFilter::new('roles')->setChoices(
+                    [
+                        'Admin' => 'ROLE_ADMIN',
+                        'Owner' => 'ROLE_OWNER',
+                    ]
+                ))
+                ->add('firstName')
+                ->add('lastName')
+                ->add('tel');
+
+
+        return $filters;
+    }
+
     public function configureActions(Actions $actions): Actions
     {
         $impersonate = Action::new('impersonate', 'Impersonate')
@@ -76,7 +97,7 @@ class UserCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
 {
-    yield TextField::new('email');
+    yield EmailField::new('email');
 
     yield TextField::new('password')->onlyWhenCreating();
     yield ChoiceField::new('roles')->setChoices([
