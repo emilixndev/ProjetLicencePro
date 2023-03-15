@@ -13,14 +13,35 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class DashboardController extends AbstractDashboardController
 {
+
+
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+
+
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
-         return $this->render('backend/dashboard.html.twig');
+        $materialRepo = $this->entityManager->getRepository(Material::class);
+        $materialCount = $materialRepo->count([]);
+        $reservationRepo = $this->entityManager->getRepository(Reservation::class);
+        $reservationCount = $reservationRepo->count([]);
 
+return $this->render('backend/dashboard.html.twig', [
+    'materialCount' => $materialCount,
+    'reservationCount' => $reservationCount,
+]);
+    
+    
     }
 
     public function configureDashboard(): Dashboard

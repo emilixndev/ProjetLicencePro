@@ -1,10 +1,221 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
-
-
-
 {% block main %}
 
-    <ul>
-        <div>test</div>
-    </ul>
+
+	{% if is_granted('ROLE_ADMIN') %}
+		<div class="ml-5 d-flex">
+			<div class=" align-items-center" style="width:50%">
+				<div style="width:200px; margin-left:50px">
+					<p class="m-0 font-weight-bold text-primary" style="font-size:25px;">
+						{{ app.user.getEmail() }}
+					</p>
+					<p class="m-0 font-weight-bold text-primary" style="font-size:18px;">
+						{{ app.user.getLastName() }}
+						{{ app.user.getFirstName() }}
+					</p>
+				</div>
+				<div class="d-flex">
+					<div class="card m-5" style="width: 18rem;">
+						<div class="card-body">
+							<h5 class="card-title">
+								Nombre de matériel
+								{{materialCount}}
+							</h5>
+							<p class="display-5" id="countMaterials">
+								0
+							</p>
+						</div>
+					</div>
+					<div class="card m-5" style="width: 18rem;">
+						<div class="card-body">
+							<h5 class="card-title">
+								Nombre de réservation {{reservationCount}}
+							</h5>
+							<p class="display-5" id="getTotalReservations">
+								0
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div style="width:50%" class="d-flex justify-content-center">
+				<div class="" style="width: 18rem;">
+					<div class="card-body">
+						<canvas id="myChart" width="400" height="400"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+		<script>
+			// Récupérer les données pour le graphique
+var data = {
+labels: [
+'Matériel réservé', 'Matériel non réservé'
+],
+datasets: [
+{
+data: [
+{{ reservationCount }},
+{{ materialCount }} - {{ reservationCount }}
+],
+backgroundColor: ['rgb(54, 162, 235)', 'rgb(58, 64, 90)']
+},
+]
+};
+
+// Créer le graphique de type Doughnut
+var myChart = new Chart(document.getElementById('myChart'), {
+type: 'doughnut',
+data: data,
+options: {
+responsive: true,
+maintainAspectRatio: false
+}
+});
+
+
+let finalValueReser = {{ reservationCount }};
+
+console.log(finalValueReser)
+
+window.addEventListener("load", () => {
+let getTotalReservations = document.getElementById("getTotalReservations");
+let countMaterials = document.getElementById("countMaterials");
+
+let currentValue = 0;
+
+let currentValueReser = 0;
+let finalValue = {{ materialCount }};
+
+
+function updateValue() {
+if (currentValue <= finalValue) {
+countMaterials.innerHTML = currentValue;
+currentValue++;
+setTimeout(updateValue, 1);
+}
+}
+function updateValueReser() {
+if (currentValueReser <= finalValueReser) {
+getTotalReservations.innerHTML = currentValueReser;
+currentValueReser++;
+setTimeout(updateValueReser, 1);
+}
+}
+
+updateValueReser();
+updateValue();
+});
+		</script>
+
+
+	{% else %}
+		<div class="ml-5 row">
+			<div class=" align-items-center col-12 col-md-6">
+				<div class="px-2 pb-3" style="width:200px;">
+					<p class="m-0 font-weight-bold text-primary" style="font-size:25px;">
+						{{ app.user.getEmail() }}
+					</p>
+					<p class="m-0 font-weight-bold text-primary" style="font-size:18px;">
+						{{ app.user.getLastName() }}
+						{{ app.user.getFirstName() }}
+					</p>
+				</div>
+				<div class="d-flex">
+					<div class="card m-1 m-md-2" style="width: 18rem;">
+						<div class="card-body">
+							<h5 class="card-title">
+								Nombre de matériel
+							</h5>
+							<p class="display-5 text-primary" id="countMaterials">
+								0
+							</p>
+						</div>
+					</div>
+					<div class="card m-1 m-md-2" style="width: 18rem;">
+						<div class="card-body">
+							<h5 class="card-title">
+								Nombre de réservation
+							</h5>
+							<p class="display-5" id="getTotalReservations">
+								0
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="d-flex justify-content-center col-12 col-md-6">
+				<div class="" style="width: 18rem;">
+					<div class="card-body d-flex justify-content-center">
+						<canvas id="myChart" width="400" height="400"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+		<script>
+			// Récupérer les données pour le graphique
+var data = {
+labels: [
+'Matériel réservé', 'Matériel non réservé'
+],
+datasets: [
+{
+data: [
+{{ app.user.getTotalReservations() }},
+{{ app.user.countMaterials }} - {{ app.user.getTotalReservations() }}
+],
+backgroundColor: ['rgb(54, 162, 235)', 'rgb(58, 64, 90)']
+},
+]
+};
+
+// Créer le graphique de type Doughnut
+var myChart = new Chart(document.getElementById('myChart'), {
+type: 'doughnut',
+data: data,
+options: {
+responsive: true,
+maintainAspectRatio: false
+}
+});
+
+
+let finalValueReser = {{ app.user.getTotalReservations }};
+
+console.log(finalValueReser)
+
+window.addEventListener("load", () => {
+let getTotalReservations = document.getElementById("getTotalReservations");
+let countMaterials = document.getElementById("countMaterials");
+
+let currentValue = 0;
+
+let currentValueReser = 0;
+let finalValue = {{ app.user.countMaterials }};
+
+
+function updateValue() {
+if (currentValue <= finalValue) {
+countMaterials.innerHTML = currentValue;
+currentValue++;
+setTimeout(updateValue, 150);
+}
+}
+function updateValueReser() {
+if (currentValueReser <= finalValueReser) {
+getTotalReservations.innerHTML = currentValueReser;
+currentValueReser++;
+setTimeout(updateValueReser, 150);
+}
+}
+
+updateValueReser();
+updateValue();
+});
+		</script>
+	{% endif %}
+
+
 {% endblock %}
