@@ -126,6 +126,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->materials;
     }
 
+    public function countMaterials(): int
+    {
+        return $this->materials->count();
+    }
+
+
+
     public function addMaterial(Material $material): self
     {
         if (!$this->materials->contains($material)) {
@@ -188,4 +195,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->email;
     }
+
+
+    public function getTotalReservations()
+{
+    $count = 0;
+    foreach ($this->getMaterials() as $material) {
+        $count += count($material->getReservations());
+    }
+    return $count;
+}
+
+
+
 }
