@@ -8,12 +8,17 @@ import { Link } from "react-router-dom";
 import Pagination from "../components/Pagination";
 import { useRecoilState } from "recoil";
 import { productsState } from "../features/Products";
+import { selectedCatState } from "../features/SelectedCategory";
+import imageDefault from "../assets/default-image.jpg";
+import { selectedBrandState } from "../features/SelectedBrand";
 const Home = () => {
   const [materials, setMaterials] = useState([]);
   const [pages, setPages] = useState([]);
   const [pageIndex, setPageIndex] = useState(0);
   const [numberOfPages, setNumberOfPages] = useState(0);
-
+  const [products, setProducts] = useRecoilState(productsState);
+  const [selectedCat, setSelectedCat] = useRecoilState(selectedCatState);
+  const [selectedBrand, setSelectedBrand] = useRecoilState(selectedBrandState);
   function paginate(a, pageIndex, pageSize) {
     var endIndex = Math.min((pageIndex + 1) * pageSize, a.length);
     return a.slice(Math.max(endIndex - pageSize, 0), endIndex);
@@ -37,10 +42,7 @@ const Home = () => {
   const fetchProducts = async () => {
     try {
       const res = await client().get("materials");
-      console.log("fetched Products", res.data);
-      // setMaterials(res.data);
       setProducts(res.data);
-
       const numPages = Math.ceil(res.data.length / 9);
       setNumberOfPages(numPages);
 
@@ -49,21 +51,77 @@ const Home = () => {
         pagesArray.push(paginate(res.data, i, 9));
       }
       setPages(pagesArray);
-      console.log("pages", pages);
     } catch (error) {
       console.log("error on products fetch", error);
     }
   };
+  const filterProducts = () => {
+    console.log("selectedCat", selectedCat);
+    console.log("pages", products);
+    if (selectedCat === "All") {
+      const numPages = Math.ceil(products.length / 9);
+      setNumberOfPages(numPages);
 
+      let pagesArray = [];
+      for (let i = 0; i < numPages; i++) {
+        pagesArray.push(paginate(products, i, 9));
+      }
+      setProducts(products);
+      setPages(pagesArray);
+    } else {
+      const result = products.filter((product) => {
+        return product.materialTypes[0].name === selectedCat;
+      });
+
+      console.log("result", result);
+      setProducts(result);
+      setPages([result]);
+      const numPages = Math.ceil(pages.length / 9);
+      setNumberOfPages(numPages);
+      console.log("pages", pages, pageIndex);
+    }
+  };
+  const filterProductsByBrand = () => {
+    if (selectedBrand.length === 0) {
+      const numPages = Math.ceil(products.length / 9);
+      setNumberOfPages(numPages);
+
+      let pagesArray = [];
+      for (let i = 0; i < numPages; i++) {
+        pagesArray.push(paginate(products, i, 9));
+      }
+      setPages(pagesArray);
+    } else {
+      const result = products.filter((product) => {
+        for (let i = 0; i < selectedBrand.length; i++) {
+          if (product.brand.name === selectedBrand[i]) {
+            return true;
+          }
+        }
+      });
+      setPages([result]);
+      const numPages = Math.ceil(pages.length / 9);
+      setNumberOfPages(numPages);
+    }
+  };
   useEffect(() => {
     fetchProducts();
   }, []);
+  useEffect(() => {
+    console.log("productsHOME", products);
+  }, [products]);
+  useEffect(() => {
+    filterProducts();
+  }, [selectedCat, products]);
+  useEffect(() => {
+    filterProductsByBrand();
+  }, [selectedBrand, products]);
 
   return (
-    <div className="p-3 bg-[#FAFAFA] h-screen">
+    <div className="p-3 bg-[#FAFAFA] min-h-screen">
       <Navbar />
       <div id="wrapper" className="flex">
-        <Sidebar />
+        <Sidebar productList={products} />
         <main className="w-full flex flex-col mt-16 ml-[225px]">
           <div className="container grid grid-cols-3 gap-16 p-16">
             {pages.length > 0 ? (
@@ -74,7 +132,7 @@ const Home = () => {
                     {/**A remplacer par un id */}
                     <ProductCard
                       name={item.name}
-                      image={item.budget}
+                      image={imageDefault}
                       brand={item.brand.name}
                     />
                   </Link>

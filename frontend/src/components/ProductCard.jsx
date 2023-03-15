@@ -11,7 +11,7 @@ const ProductCard = (props) => {
         />
       </figure>
       <div className="p-5 flex flex-col gap-2 rounded-b-2 bg-gradient-to-r from-[#EBF4F5] to-[#BFD1EC] rounded-b-[5px]">
-        <h2 className="text-xl font-bold">{props.image}</h2>
+        <h2 className="text-xl font-bold">{props.name}</h2>
         <p>{props.brand}</p>
       </div>
     </div>

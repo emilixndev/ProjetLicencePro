@@ -6,7 +6,7 @@ const Pagination = (props) => {
   return (
     <div className="flex justify-end mr-16 btn-group">
       <button onClick={props.prevPage} className={"btn"}>
-        Prev
+        «
       </button>
       {Array.from({ length: props.numberOfPages }, (_, i) => (
         <button
@@ -18,7 +18,7 @@ const Pagination = (props) => {
         </button>
       ))}
       <button onClick={props.nextPage} className={"btn"}>
-        Next
+        »
       </button>
     </div>
   );
