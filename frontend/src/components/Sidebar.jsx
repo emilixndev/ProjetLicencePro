@@ -103,7 +103,7 @@ const Sidebar = (props) => {
       className=" w-56 shadow-xl pt-[50px] fixed h-full mt-16 overflow-auto pb-4"
       style={{ height: "calc(100% - 4.5rem)" }}
     >
-      <li className="text-xs text-gray-400 px-4">Filtrer par</li>
+      <li className="text-xs text-gray-800 px-4">Filtrer par</li>
       <hr className="my-2" />
       <li className="overflow-auto max-h-96">
         <p className="px-4">Filtres actifs</p>
@@ -133,25 +133,31 @@ const Sidebar = (props) => {
         </div>
         <div className={`${openCat ? "h-fit" : "h-0 overflow-hidden"} px-4`}>
           <ul className={`${openCat ? "block" : "hidden"}`}>
-            {categories.map((item) => {
-              return (
-                <div className="form-control" key={item.id}>
-                  <label
-                    className="label cursor-pointer justify-start gap-2"
-                    htmlFor="category"
-                  >
-                    <input
-                      type="radio"
-                      className="radio radio-primary"
-                      name="category"
-                      onChange={handleCat}
-                      checked={item.checked}
-                    />
-                    <span className="label-text text-neutral">{item.name}</span>
-                  </label>
-                </div>
-              );
-            })}
+            <fieldset>
+              <legend>Choisir une catégorie :</legend>
+              {categories.map((item) => {
+                return (
+                  <div className="form-control" key={item.id}>
+                    <label
+                      className="label cursor-pointer justify-start gap-2"
+                      htmlFor={"category" + item.id}
+                    >
+                      <input
+                        type="radio"
+                        className="radio radio-primary"
+                        name="category"
+                        id={"category" + item.id}
+                        onChange={handleCat}
+                        checked={item.checked}
+                      />
+                      <span className="label-text text-neutral">
+                        {item.name}
+                      </span>
+                    </label>
+                  </div>
+                );
+              })}
+            </fieldset>
           </ul>
         </div>
         <hr className="my-2" />
