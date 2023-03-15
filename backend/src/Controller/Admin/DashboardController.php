@@ -8,6 +8,7 @@ use App\Entity\Reservation;
 use App\Entity\Supplier;
 use App\Entity\User;
 use App\Entity\Brand;
+use App\Entity\Budget;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Menu\MenuItemTrait;
@@ -79,6 +80,7 @@ return $this->render('backend/dashboard.html.twig', [
 
             yield MenuItem::linkToCrud('Catégories', 'fas fa-list', MaterialType::class);
             yield MenuItem::linkToCrud('Marques', 'fas fa-tag', Brand::class);
+            yield MenuItem::linkToCrud('Budgets', 'fas fa-sack-dollar', Budget::class);
 
         yield MenuItem::section('');
 

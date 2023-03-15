@@ -24,8 +24,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 
 
+
 class UserCrudController extends AbstractCrudController
 {
+
+
+
+
+
     private $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -52,7 +58,13 @@ class UserCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         $crud
-            ->showEntityActionsInlined(true);
+            ->showEntityActionsInlined(true)
+            ->setEntityLabelInSingular('utilisateur')
+            ->setEntityLabelInPlural('utilisateurs')
+            ->setPageTitle('index', 'Gestion des utilisateurs')
+            ->setPageTitle('edit', 'Modifier un utilisateur')
+            ->setPageTitle('new', 'Créer un nouveau utilisateur')
+            ->setPageTitle("detail","Détails de l'utilisateur");
         return $crud;
 
     }
@@ -104,10 +116,10 @@ class UserCrudController extends AbstractCrudController
 
         yield TextField::new('password')->onlyWhenCreating();
 
-        yield TextField::new('firstname');
-        yield TextField::new('lastname');
+        yield TextField::new('firstName','Prénom');
+        yield TextField::new('lastName','Nom');
         yield TextField::new('tel');
-        yield ChoiceField::new('roles')
+        yield ChoiceField::new('roles','Roles')
             ->setChoices([
                 'Admin' => 'ROLE_ADMIN',
                 'Owner' => 'ROLE_OWNER',
@@ -128,6 +140,10 @@ class UserCrudController extends AbstractCrudController
         }
         throw new \Exception("Non autorisé");
     }
+
+
+
+    
 
 
 }

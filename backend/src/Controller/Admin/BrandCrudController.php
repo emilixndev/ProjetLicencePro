@@ -32,12 +32,18 @@ class BrandCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('name');
+        yield TextField::new('name','Nom');
     }
     public function configureCrud(Crud $crud): Crud
     {
         $crud
-            ->showEntityActionsInlined(true);
+            ->showEntityActionsInlined(true)
+            ->setEntityLabelInSingular('Marque')
+            ->setEntityLabelInPlural('Marques')
+            ->setPageTitle('index', 'Gestion des marques')
+            ->setPageTitle('edit', 'Modifier une marque')
+            ->setPageTitle('new', 'Créer une nouvelle marque')
+            ->setPageTitle("detail","Détails d'une marque'");
         return $crud;
 
     }
