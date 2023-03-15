@@ -98,10 +98,34 @@ const Sidebar = (props) => {
       setSelectedBrand((value) => value.filter((item) => item !== selected));
     }
   };
+  const handleKeyDown = (e) => {
+    if (e.keyCode === 27) {
+      console.log("esc");
+      setOpenCat(false);
+      setOpenBrand(false);
+    } else if (e.keyCode === 40) {
+      // down arrow
+      if (!openCat && !openBrand) {
+        setOpenCat(true);
+      } else if (openCat && !openBrand) {
+        setOpenBrand(true);
+      }
+    } else if (e.keyCode === 38) {
+      // up arrow
+      if (!openCat && openBrand) {
+        setOpenBrand(false);
+      } else if (openCat && openBrand) {
+        setOpenCat(false);
+      }
+    }
+  };
   return (
     <ul
       className=" w-56 shadow-xl pt-[50px] fixed h-full mt-16 overflow-auto pb-4"
       style={{ height: "calc(100% - 4.5rem)" }}
+      onKeyDown={handleKeyDown}
+      tabIndex="0"
+      onFocus={() => console.log("focus")}
     >
       <li className="text-xs text-gray-800 px-4">Filtrer par</li>
       <hr className="my-2" />

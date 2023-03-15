@@ -123,7 +123,7 @@ const Home = () => {
       <div id="wrapper" className="flex">
         <Sidebar productList={products} />
         <main className="w-full flex flex-col mt-16 ml-[225px]">
-          <div className="container grid grid-cols-3 gap-16 p-16">
+          <div className="container grid xl:grid-cols-3 gap-16 p-16 lg:grid-cols-2">
             {pages.length > 0 ? (
               pages[pageIndex].map((item) => {
                 return (
@@ -132,7 +132,12 @@ const Home = () => {
                     {/**A remplacer par un id */}
                     <ProductCard
                       name={item.name}
-                      image={imageDefault}
+                      image={
+                        item.imgMaterials.length > 0
+                          ? "http://127.0.0.1:8000/images/material/" +
+                            item.imgMaterials[0].path
+                          : imageDefault
+                      }
                       brand={item.brand.name}
                     />
                   </Link>
