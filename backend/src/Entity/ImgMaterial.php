@@ -20,7 +20,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         new Get(),
     ],
     normalizationContext: [
-        "groups"=>["read:category"]
+        "groups"=>["read:materials"]
     ],
     order: [
         "name" =>'ASC'
@@ -34,7 +34,6 @@ class ImgMaterial
     private ?int $id = null;
 
 
-    #[Groups(["read:materials"])]
     #[Vich\UploadableField(mapping:"material_images", fileNameProperty:"path")]
     private File|null $file=null;
 
@@ -42,6 +41,7 @@ class ImgMaterial
     private ?Material $Material = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["read:materials"])]
     private ?string $path = null;
 
 

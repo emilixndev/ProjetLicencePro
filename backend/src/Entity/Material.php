@@ -71,6 +71,7 @@ class Material
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(["read:materials"])]
     private ?string $description = null;
 
 
@@ -84,6 +85,7 @@ class Material
     private Collection $imgMaterials;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["read:materials"])]
     private ?string $link = null;
 
     #[ORM\ManyToOne(inversedBy: 'Material')]

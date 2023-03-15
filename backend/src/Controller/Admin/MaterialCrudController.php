@@ -146,6 +146,8 @@ class MaterialCrudController extends AbstractCrudController
         yield TextField::new('InventoryNumber');
 
         yield TextField::new('BCnumber', 'BC number');
+        yield TextField::new('link');
+
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder

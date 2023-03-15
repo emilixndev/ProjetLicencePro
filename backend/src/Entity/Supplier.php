@@ -31,18 +31,23 @@ class Supplier
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["read:materials"])]
     private ?string $address = null;
 
     #[ORM\Column(length: 5)]
+    #[Groups(["read:materials"])]
     private ?string $postalCode = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["read:materials"])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["read:materials"])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["read:materials"])]
     private ?string $phone = null;
 
     #[ORM\OneToMany(mappedBy: 'supplier', targetEntity: Material::class)]
