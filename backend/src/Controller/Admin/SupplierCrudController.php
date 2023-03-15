@@ -2,7 +2,10 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Brand;
 use App\Entity\Supplier;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -52,5 +55,19 @@ class SupplierCrudController extends AbstractCrudController
 
         return $crud;
 
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        $actions->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+            return $action->displayIf(function (Supplier $supplier){
+                if(count($supplier->getMaterials())===0){
+                    return true;
+                }
+                return false;
+            });
+            return $action;
+        });
+        return $actions;
     }
 }

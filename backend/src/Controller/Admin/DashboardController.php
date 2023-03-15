@@ -8,6 +8,7 @@ use App\Entity\Reservation;
 use App\Entity\Supplier;
 use App\Entity\User;
 use App\Entity\Brand;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Menu\MenuItemTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -27,7 +28,7 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('LabStock');
+            ->setTitle('LabStock')->disableDarkMode();
             
     }
 
@@ -37,8 +38,14 @@ class DashboardController extends AbstractDashboardController
 
         $isAdmin = $this->isGranted('ROLE_ADMIN');
         yield MenuItem::section('Administration');
+        yield MenuItem::subMenu('Réglage utilisateur', 'fa fa-cog')->setSubItems([
+            MenuItem::linkToRoute('Changer de mot de passe', 'fa fa-lock','resetUserPassword'),
+            MenuItem::linkToCrud('Changer les informations', 'fa fa-user', User::class)
+            ->setAction(Action::EDIT)
+            ->setEntityId($this->getUser()->getId())
+            ,
+        ]);
 
-        yield MenuItem::linkToRoute('Changer de mot de passe', 'fa fa-lock','resetUserPassword');
 
 
         if($isAdmin){

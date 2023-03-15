@@ -73,8 +73,7 @@ class Material
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToMany(targetEntity: Brand::class, mappedBy: 'material')]
-    private Collection $brands;
+
 
     #[ORM\ManyToOne(inversedBy: 'materials')]
     #[Groups(["read:materials"])]

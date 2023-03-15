@@ -2,7 +2,6 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\ImgMaterial;
 use App\Entity\Material;
 use App\Form\MaterialImgType;
 use App\Repository\UserRepository;
@@ -22,21 +21,16 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Factory\FilterFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 
 
 use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
-use http\Client\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Security;
 
 
@@ -76,7 +70,7 @@ class MaterialCrudController extends AbstractCrudController
             ->add(DateTimeFilter::new('endOfGuarantyDate'))
             ->add('InventoryNumber')
             ->add('supplier')
-            ->add('brands')
+            ->add('brand')
             ->add('materialTypes');
         return $filters;
     }
@@ -157,12 +151,11 @@ class MaterialCrudController extends AbstractCrudController
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
         $response = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
-        if ($this->security->isGranted('ROLE_OWNER')) {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
 
-            return $response->andWhere('entity.user = :id_utilisateur')->setParameter('id_utilisateur', $this->getUser()->getId());
         }
-
-        return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+        return $response->andWhere('entity.user = :id_utilisateur')->setParameter('id_utilisateur', $this->getUser()->getId());
     }
 
 
