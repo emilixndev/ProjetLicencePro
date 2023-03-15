@@ -2,7 +2,10 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Material;
 use App\Entity\Reservation;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -12,13 +15,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 
 
-
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
 
 class ReservationCrudController extends AbstractCrudController
 {
@@ -30,17 +34,40 @@ class ReservationCrudController extends AbstractCrudController
         return Reservation::class;
     }
 
+    public function configureCrud(Crud $crud): Crud
+    {
+        $crud
+            ->showEntityActionsInlined(true);
+        return $crud;
+
+    }
+
     public function configureActions(Actions $actions): Actions
     {
-    
-        // Vérifier si l'utilisateur connecté a le rôle "ROLE_ADMIN"
-
-    
-        // Si l'utilisateur n'a pas le rôle "ROLE_ADMIN", supprimer l'action "Nouveau"
         return $actions
             ->disable(Action::NEW)
             ->disable(Action::EDIT);
 
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        $filters
+            ->add('emailBorrower')
+            ->add(ChoiceFilter::new('statutBorrower')
+                ->setChoices([
+                    'perma'=>'Perma',
+                    'Doc'=>'Doc',
+                    'PostDoc'=>'PostDoc',
+                    'Etudiant'=>'Etudiant',
+                    'EXT'=>'EXT']))
+            ->add('material')
+            ->add(DateTimeFilter::new('endDate'))
+            ->add(DateTimeFilter::new('startDate'))
+            ->add('lastName')
+            ->add('firstName');
+
+        return  $filters;
     }
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -49,36 +76,38 @@ class ReservationCrudController extends AbstractCrudController
     }
 
 
-    
     public function configureFields(string $pageName): iterable
     {
 
 
-           yield IdField::new('id')->HideOnForm();
-           yield TextField::new('firstName');
-           yield TextField::new('LastName');
-           yield DateField::new('startDate');
-           yield DateField::new('endDate');
-           yield TextField::new('emailBorrower');
-           yield TextField::new('statutBorrower');
-           yield AssociationField::new('material','Materiel')->formatValue(function ($value, $entity) {
-                return $entity->getMaterial()->getName();
-            });
+        yield TextField::new('firstName');
+        yield TextField::new('LastName');
+        yield DateField::new('startDate');
+        yield DateField::new('endDate');
+        yield TextField::new('emailBorrower');
+        yield TextField::new('statutBorrower');
+        yield AssociationField::new('material', 'Matériel')->formatValue(function ($value, $entity) {
+            return $entity->getMaterial()->getName();
+        });
+        yield TextField::new('material', 'Propriétaire')
+            ->formatValue(function ($value, Reservation $entity) {
+            return $entity->getMaterial()->getUser()->getFirstName().
+                ' '.
+                $entity->getMaterial()->getUser()->getLastName();
+        })
+            ->setPermission("ROLE_ADMIN");
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
-        $user = $this->getUser(); // récupère l'utilisateur connecté
-
-        $qb = $this->entityManager->createQueryBuilder()
-            ->select('entity')
-            ->from($entityDto->getFqcn(), 'entity')
-            ->join('entity.material', 'material')
-            ->join('material.user', 'user')
-            ->where('user = :user')
-            ->setParameter('user', $user);
-    
-        return $qb;
+        $response = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+        if($this->isGranted("ROLE_ADMIN")){
+        return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+        }
+        return $response
+            ->leftJoin('entity.material','material')
+            ->andWhere('material.user = :id_utilisateur')
+            ->setParameter('id_utilisateur', $this->getUser()->getId());
     }
-    
+
 }

@@ -3,7 +3,9 @@
 
 namespace App\Event\EventSubscriber;
 
+use App\Entity\ImgMaterial;
 use App\Entity\Reservation;
+use App\Form\MaterialImgType;
 use App\Service\Emailservice;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,7 +16,8 @@ class EntitySubscriber implements EventSubscriber
 {
 
     public function __construct(
-        private Emailservice $emailservice
+        private Emailservice $emailservice,
+        private EntityManagerInterface $entityManager,
     )
     {
 
@@ -31,9 +34,16 @@ class EntitySubscriber implements EventSubscriber
     {
         $entity = $args->getObject();
         if($entity instanceof Reservation){
+            if(!$entity->getEndDate()){
+                $entity->getMaterial()->setIsAvailable(false);
+                $this->entityManager->persist($entity);
+                $this->entityManager->flush();
+            }
 //            $this->emailservice->sendConfirmationReservation($entity);
 //            $this->emailservice->sendNotificationOwner($entity);
         }
+
+
     }
 }
 ?>

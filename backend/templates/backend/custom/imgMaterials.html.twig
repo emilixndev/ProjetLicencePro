@@ -1,0 +1,13 @@
+<div class="form-widget">
+    {% if(field.value|length == 0 )%}
+        <a class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> Aucune image liée</a>
+    {%else %}
+        {% for key,image in field.value  %}
+            <img width="300"  height="200" style="object-fit: cover; margin-right: 15px"  src="/images/material/{{ image.path }}"/>
+            {% if(key%2 ==1) %}
+                <br/><br/>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+</div>

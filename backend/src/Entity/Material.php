@@ -71,20 +71,21 @@ class Material
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(["read:materials"])]
     private ?string $description = null;
 
-    #[ORM\ManyToMany(targetEntity: Brand::class, mappedBy: 'material')]
-    private Collection $brands;
+
 
     #[ORM\ManyToOne(inversedBy: 'materials')]
     #[Groups(["read:materials"])]
     private ?Brand $brand = null;
 
-    #[ORM\OneToMany(mappedBy: 'Material', targetEntity: ImgMaterial::class)]
+    #[ORM\OneToMany(mappedBy: 'Material', targetEntity: ImgMaterial::class, cascade: ['persist','remove'],orphanRemoval: true)]
     #[Groups(["read:materials"])]
     private Collection $imgMaterials;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["read:materials"])]
     private ?string $link = null;
 
     #[ORM\ManyToOne(inversedBy: 'Material')]
@@ -338,6 +339,22 @@ class Material
     public function __toString(): string
     {
         return $this->name;
+    }
+
+    public function getExportedData(){
+        return[
+            'id'=>$this->id,
+            'Nom'=>$this->name,
+            'Description'=>$this->description,
+            'Bc Number'=>$this->BCnumber,
+            'Date de livraison'=>date_format($this->deleveryDate, 'Y-m-d'),
+            'Date de fin de garantie'=>date_format($this->endOfGuarantyDate, 'Y-m-d'),
+            'Numero inventaire'=>$this->InventoryNumber,
+            'Marque'=>$this->brand->getName(),
+            'Budget'=>$this->budget->getName(),
+            'Fournisseur'=>$this->supplier->getName(),
+            'Proprietaire'=>$this->user->getFirstName()." ".$this->user->getLastName(),
+        ];
     }
 
 }

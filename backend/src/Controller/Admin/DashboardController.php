@@ -8,7 +8,9 @@ use App\Entity\Reservation;
 use App\Entity\Supplier;
 use App\Entity\User;
 use App\Entity\Brand;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard; 
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Menu\MenuItemTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,26 +28,41 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Backend');
+            ->setTitle('LabStock')->disableDarkMode();
             
     }
 
     public function configureMenuItems(): iterable
     {
-        $isAdmin = $this->isGranted('ROLE_ADMIN');
-
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::linkToRoute('Changer de mot de passe', 'fa fa-lock','resetUserPassword');
+
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+        yield MenuItem::section('Administration');
+        yield MenuItem::subMenu('Réglage utilisateur', 'fa fa-cog')->setSubItems([
+            MenuItem::linkToRoute('Changer de mot de passe', 'fa fa-lock','resetUserPassword'),
+            MenuItem::linkToCrud('Changer les informations', 'fa fa-user', User::class)
+            ->setAction(Action::EDIT)
+            ->setEntityId($this->getUser()->getId())
+            ,
+        ]);
+
 
 
         if($isAdmin){
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', User::class);
         }
-        yield MenuItem::linkToCrud('Matériels', 'fas fa-bag-shopping', Material::class);
-        yield MenuItem::linkToCrud('Catégories', 'fas fa-list', MaterialType::class);
+        yield MenuItem::section('Gestion matériel');
+
+            yield MenuItem::linkToCrud('Matériels', 'fas fa-laptop', Material::class);
         yield MenuItem::linkToCrud('Fournisseurs', 'fas fa-truck', Supplier::class);
+
+            yield MenuItem::linkToCrud('Catégories', 'fas fa-list', MaterialType::class);
+            yield MenuItem::linkToCrud('Marques', 'fas fa-tag', Brand::class);
+
+        yield MenuItem::section('');
+
+
         yield MenuItem::linkToCrud('Réservations', 'fas fa-calendar-days', Reservation::class);
-        yield MenuItem::linkToCrud('Marques', 'fas fa-tag', Brand::class);
 
     }
 }

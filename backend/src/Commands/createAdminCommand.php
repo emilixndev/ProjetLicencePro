@@ -45,6 +45,9 @@ class createAdminCommand extends Command
             $newUser = new User();
             $newUser->setRoles(['ROLE_ADMIN'])
                 ->setEmail($email)
+                ->setFirstName("")
+                ->setLastName("")
+                ->setTel("")
                 ->setPassword(password_hash($pass,PASSWORD_DEFAULT));
             $this->entityManager->persist($newUser);
             $this->entityManager->flush();
