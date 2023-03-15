@@ -11,6 +11,8 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 class EntitySubscriber implements EventSubscriber
 {
@@ -18,6 +20,7 @@ class EntitySubscriber implements EventSubscriber
     public function __construct(
         private Emailservice $emailservice,
         private EntityManagerInterface $entityManager,
+        private ParameterBagInterface $params
     )
     {
 
@@ -26,7 +29,8 @@ class EntitySubscriber implements EventSubscriber
     public function getSubscribedEvents()
     {
         return [
-            Events::postPersist
+            Events::postPersist,
+            Events::postRemove,
         ];
     }
 
@@ -44,6 +48,21 @@ class EntitySubscriber implements EventSubscriber
         }
 
 
+
     }
+
+    public function postRemove(LifecycleEventArgs $args){
+
+        $entity = $args->getObject();
+        if($entity instanceof ImgMaterial){
+            $fileSystem = new Filesystem();
+            $fileSystem->remove($this->params->get('app.path.material_images')."/".$entity->getPath());
+    }
+
+
+
+
+
+}
 }
 ?>
