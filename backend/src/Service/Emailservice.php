@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Material;
 use App\Entity\Reservation;
 use Mailjet\Client;
 use Mailjet\Resources;
@@ -85,6 +86,33 @@ class Emailservice
     }
 
 
+    public function sendEndOfGuarantyWarn(
+        Material $material,
+    ){
+        $body = [
+            'Messages' => [
+                [
+                    'From' => [
+                        'Email' => "arthur.gullmann@etu.unistra.fr",
+                        'Name' => "LabStock"
+                    ],
+                    'To' => [
+                        [
+                            'Email' => "emilien.muck@gmail.com",
+                        ]
+                    ],
+                    'TemplateID' => 4657870,
+                    'TemplateLanguage' => true,
+                    'Subject' => "Problème de garantie",
+                    'Variables' => [
+                        'invNumber' => $material->getInventoryNumber(),
+                    ],
+                ],
+            ]
+        ];
+        $reponse = $this->mj->post(Resources::$Email, ['body' => $body]);
+        $reponse->success();
+    }
 
 
 }
