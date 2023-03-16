@@ -10,3 +10,10 @@
 .test {
   color: red;
 }
+.placeholder-black *{
+  color: black !important;
+}
+.placeholder-black input::placeholder{
+  color: black !important;
+}
+.placeholder-black input{color: black !important;}

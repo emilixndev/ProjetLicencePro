@@ -50,13 +50,17 @@ const Sidebar = (props) => {
     setOpenBrand(!openBrand);
   };
   const handleCat = (e) => {
+    console.log("******", e.target.nextSibling.innerText);
     const selected = e.target.nextSibling.innerText;
     setSelectedCat(selected);
     setCategories((value) => {
       const newData = [...value];
+      console.log("newData", newData);
       newData.forEach((cat) => {
         if (cat.name === selected) {
           cat.checked = true;
+        } else {
+          cat.checked = false;
         }
       });
       return newData;
@@ -98,36 +102,12 @@ const Sidebar = (props) => {
       setSelectedBrand((value) => value.filter((item) => item !== selected));
     }
   };
-  const handleKeyDown = (e) => {
-    if (e.keyCode === 27) {
-      console.log("esc");
-      setOpenCat(false);
-      setOpenBrand(false);
-    } else if (e.keyCode === 40) {
-      // down arrow
-      if (!openCat && !openBrand) {
-        setOpenCat(true);
-      } else if (openCat && !openBrand) {
-        setOpenBrand(true);
-      }
-    } else if (e.keyCode === 38) {
-      // up arrow
-      if (!openCat && openBrand) {
-        setOpenBrand(false);
-      } else if (openCat && openBrand) {
-        setOpenCat(false);
-      }
-    }
-  };
   return (
     <ul
       className=" w-56 shadow-xl pt-[50px] fixed h-full mt-16 overflow-auto pb-4"
       style={{ height: "calc(100% - 4.5rem)" }}
-      onKeyDown={handleKeyDown}
-      tabIndex="0"
-      onFocus={() => console.log("focus")}
     >
-      <li className="text-xs text-gray-800 px-4">Filtrer par</li>
+      <li className="text-xs text-gray-400 px-4">Filtrer par</li>
       <hr className="my-2" />
       <li className="overflow-auto max-h-96">
         <p className="px-4">Filtres actifs</p>
@@ -157,31 +137,25 @@ const Sidebar = (props) => {
         </div>
         <div className={`${openCat ? "h-fit" : "h-0 overflow-hidden"} px-4`}>
           <ul className={`${openCat ? "block" : "hidden"}`}>
-            <fieldset>
-              <legend>Choisir une catégorie :</legend>
-              {categories.map((item) => {
-                return (
-                  <div className="form-control" key={item.id}>
-                    <label
-                      className="label cursor-pointer justify-start gap-2"
-                      htmlFor={"category" + item.id}
-                    >
-                      <input
-                        type="radio"
-                        className="radio radio-primary"
-                        name="category"
-                        id={"category" + item.id}
-                        onChange={handleCat}
-                        checked={item.checked}
-                      />
-                      <span className="label-text text-neutral">
-                        {item.name}
-                      </span>
-                    </label>
-                  </div>
-                );
-              })}
-            </fieldset>
+            {categories.map((item) => {
+              return (
+                <div className="form-control" key={item.id}>
+                  <label
+                    className="label cursor-pointer justify-start gap-2"
+                    htmlFor="category"
+                  >
+                    <input
+                      type="radio"
+                      className="radio radio-primary"
+                      name="category"
+                      onChange={handleCat}
+                      checked={item.checked}
+                    />
+                    <span className="label-text text-neutral">{item.name}</span>
+                  </label>
+                </div>
+              );
+            })}
           </ul>
         </div>
         <hr className="my-2" />

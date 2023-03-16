@@ -96,6 +96,7 @@ const Product = () => {
                   <DateRangePicker
                     placeholder="Voir les disponibilités"
                     onOk={onOkDate}
+                    className="placeholder-black"
                   />
                 </div>
               </div>

@@ -61,7 +61,6 @@ const Home = () => {
     if (selectedCat === "All") {
       const numPages = Math.ceil(products.length / 9);
       setNumberOfPages(numPages);
-
       let pagesArray = [];
       for (let i = 0; i < numPages; i++) {
         pagesArray.push(paginate(products, i, 9));
@@ -69,16 +68,16 @@ const Home = () => {
       setProducts(products);
       setPages(pagesArray);
     } else {
+      console.log("selectedCatdsfdfgd", selectedCat);
       const result = products.filter((product) => {
         return product.materialTypes[0].name === selectedCat;
       });
-
-      console.log("result", result);
-      setProducts(result);
       setPages([result]);
       const numPages = Math.ceil(pages.length / 9);
       setNumberOfPages(numPages);
-      console.log("pages", pages, pageIndex);
+      // const numPages = Math.ceil(pages.length / 9);
+      // setNumberOfPages(numPages);
+      // console.log("pages", pages, pageIndex);
     }
   };
   const filterProductsByBrand = () => {
@@ -107,9 +106,6 @@ const Home = () => {
   useEffect(() => {
     fetchProducts();
   }, []);
-  useEffect(() => {
-    console.log("productsHOME", products);
-  }, [products]);
   useEffect(() => {
     filterProducts();
   }, [selectedCat, products]);
