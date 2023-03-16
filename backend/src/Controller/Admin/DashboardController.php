@@ -38,10 +38,22 @@ class DashboardController extends AbstractDashboardController
         $materialCount = $materialRepo->count([]);
         $reservationRepo = $this->entityManager->getRepository(Reservation::class);
         $reservationCount = $reservationRepo->count([]);
+        $brandRepo = $this->entityManager->getRepository(Brand::class);
+        $brandCount = $brandRepo->count([]);
+        $catRepo = $this->entityManager->getRepository(MaterialType::class);
+        $catCount = $catRepo->count([]);
+        $budgetRepo = $this->entityManager->getRepository(MaterialType::class);
+        $budgetCount = $budgetRepo->count([]);
+        $userRepo = $this->entityManager->getRepository(MaterialType::class);
+        $userCount = $userRepo->count([]);
 
 return $this->render('backend/dashboard.html.twig', [
     'materialCount' => $materialCount,
     'reservationCount' => $reservationCount,
+    'brandCount' => $brandCount,
+    'catCount' => $catCount,
+    'budgetCount' => $budgetCount,
+    'userCount' => $userCount,
 ]);
     
     

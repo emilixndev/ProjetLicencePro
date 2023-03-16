@@ -134,8 +134,8 @@ class MaterialCrudController extends AbstractCrudController
             ->setTemplatePath("backend/custom/imgMaterials.html.twig");
 
 
-        yield DateField::new('deleveryDate', 'Date de début de garantie');
-        yield DateField::new('endOfGuarantyDate','Date de fin de garantie');
+        yield DateField::new('deleveryDate', 'Début de garantie');
+        yield DateField::new('endOfGuarantyDate','Fin de garantie');
 
         yield AssociationField::new('brand', 'Marque');
         yield AssociationField::new('materialTypes', 'Type de matériel')
