@@ -20,12 +20,12 @@
 					</p>
 				</div>
 			</div>
-			<div class="card  mb-3 m-1 m-md-2" style="width: 18rem;">
+			<div class="card mb-3 m-1 m-md-2" style="width: 18rem;">
 				<div class="card-body">
 					<h5 class="card-title">
-						Nombre de réservation
+					Nombre total de matériel
 					</h5>
-					<p class="display-5" id="getTotalReservations" style="font-weight: 500;font-family:Arial, Helvetica, sans-serif;color:#5368D5!important">
+					<p class="display-5 text-primary" id="getTotalMaxMat" style="font-weight: 500;font-family:Arial, Helvetica, sans-serif;color:#5368D5!important">
 						0
 					</p>
 				</div>
@@ -76,28 +76,6 @@
 		
 		
 		</div>
-		<div class="d-flex flex-column flex-md-row justify-content-center align-items-center">
-			<div class="card mb-3 m-1 m-md-2" style="width: 18rem;">
-				<div class="card-body">
-					<h5 class="card-title">
-					Nombre total de matériel
-					</h5>
-					<p class="display-5 text-primary" id="getTotalMaxMat" style="font-weight: 500;font-family:Arial, Helvetica, sans-serif;color:#5368D5!important">
-						0
-					</p>
-				</div>
-			</div>
-			<div class="card mb-3 m-1 m-md-2" style="width: 18rem;">
-				<div class="card-body">
-					<h5 class="card-title">
-						Nombre total de réservation
-					</h5>
-					<p class="display-5" id="getTotalMaxRes" style="font-weight: 500;font-family:Arial, Helvetica, sans-serif;color:#5368D5!important">
-						0
-					</p>
-				</div>
-			</div>
-		</div>
 	</div>
 	<div class="d-flex justify-content-center col-12 col-md-6">
 		
@@ -108,13 +86,10 @@
 
 
 
-let finalValueReser = {{ app.user.getTotalReservations }};
 
-console.log(finalValueReser)
 
 window.addEventListener("load", () => {
-let getTotalReservations = document.getElementById("getTotalReservations");
-let countMaterials = document.getElementById("countMaterials");
+
 
 function updateValue(elementId, finalValue) {
 let element = document.getElementById(elementId);
@@ -132,13 +107,12 @@ update();
 }
 
 updateValue("countMaterials", {{  app.user.countMaterials() }});
-updateValue("getTotalReservations", {{ app.user.getTotalReservations() }});
 updateValue("getTotalBudget", {{ budgetCount }});
 updateValue("getTotalCat", {{ catCount }});
 updateValue("getTotalBrand", {{ brandCount }});
 updateValue("getTotalUser", {{ userCount }});
 updateValue("getTotalMaxMat", {{ materialCount }});
-updateValue("getTotalMaxRes", {{ reservationCount }});
+
 
 });
 </script>
@@ -156,16 +130,6 @@ updateValue("getTotalMaxRes", {{ reservationCount }});
 								Nombre de matériel
 							</h5>
 							<p class="display-5 text-primary" id="countMaterials" style="font-weight: 500;font-family:Arial, Helvetica, sans-serif;color:#5368D5!important">
-								0
-							</p>
-						</div>
-					</div>
-					<div class="card m-1 m-md-2" style="width: 18rem;">
-						<div class="card-body">
-							<h5 class="card-title">
-								Nombre de réservation
-							</h5>
-							<p class="display-5" id="getTotalReservations" style="font-weight: 500;font-family:Arial, Helvetica, sans-serif;color:#5368D5!important">
 								0
 							</p>
 						</div>
@@ -214,13 +178,12 @@ updateValue("getTotalMaxRes", {{ reservationCount }});
 
 
 
-let finalValueReser = {{ app.user.getTotalReservations }};
 
-console.log(finalValueReser)
+
+
 
 window.addEventListener("load", () => {
-let getTotalReservations = document.getElementById("getTotalReservations");
-let countMaterials = document.getElementById("countMaterials");
+
 
 function updateValue(elementId, finalValue) {
   let element = document.getElementById(elementId);
@@ -238,7 +201,6 @@ function updateValue(elementId, finalValue) {
 }
 
 updateValue("countMaterials", {{ app.user.countMaterials() }});
-updateValue("getTotalReservations", {{ app.user.getTotalReservations() }});
 updateValue("getTotalBudget", {{ budgetCount }});
 updateValue("getTotalCat", {{ catCount }});
 updateValue("getTotalBrand", {{ brandCount }});

@@ -42,9 +42,9 @@ class DashboardController extends AbstractDashboardController
         $brandCount = $brandRepo->count([]);
         $catRepo = $this->entityManager->getRepository(MaterialType::class);
         $catCount = $catRepo->count([]);
-        $budgetRepo = $this->entityManager->getRepository(MaterialType::class);
+        $budgetRepo = $this->entityManager->getRepository(Budget::class);
         $budgetCount = $budgetRepo->count([]);
-        $userRepo = $this->entityManager->getRepository(MaterialType::class);
+        $userRepo = $this->entityManager->getRepository(User::class);
         $userCount = $userRepo->count([]);
 
 return $this->render('backend/dashboard.html.twig', [
