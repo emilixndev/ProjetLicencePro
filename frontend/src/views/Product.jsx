@@ -79,10 +79,22 @@ const Product = () => {
     setIsModalOpen(false);
   };
 
-  const apiStartDate = new Date("2023-03-20");
-  const apiEndDate = new Date("2023-03-25");
   const isDateDisabled = (date) => {
-    return date >= apiStartDate && date <= apiEndDate;
+    const disabledDates = reservations.flatMap((reservation) => {
+      const startDate = new Date(reservation.startDate);
+      const endDate = reservation.endDate
+        ? new Date(reservation.endDate)
+        : null;
+      const disabledDates = [];
+      let currentDate = startDate;
+      while (!endDate || currentDate <= endDate) {
+        disabledDates.push(currentDate.toISOString().substring(0, 10));
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+      return disabledDates;
+    });
+    const dateString = date.toISOString().substring(0, 10);
+    return disabledDates.includes(dateString);
   };
 
   const handleFirstNameChange = (e) => {
@@ -161,9 +173,11 @@ const Product = () => {
               </div>
               <div className="">
                 <h2 className="text-lg font-semibold mb-2">Réservation:</h2>
+                <h3>Avec une date de fin prédéfinie:</h3>
                 <DateRangePicker
                   onOk={handleOk}
                   disabledDate={isDateDisabled}
+                  showOneCalendar
                   placeholder="Voir les disponibilités"
                 />
               </div>
