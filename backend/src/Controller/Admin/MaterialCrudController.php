@@ -69,12 +69,9 @@ class MaterialCrudController extends AbstractCrudController
         }
         $filters
             ->add("name")
-            ->add("BCnumber")
             ->add(BooleanFilter::new('isAvaible'))
-            ->add('budget')
             ->add(DateTimeFilter::new('deleveryDate'))
             ->add(DateTimeFilter::new('endOfGuarantyDate'))
-            ->add('InventoryNumber')
             ->add('supplier')
             ->add('brand')
             ->add('materialTypes');
@@ -147,12 +144,12 @@ class MaterialCrudController extends AbstractCrudController
                 return implode(', ', $types);
             })
             ->setCrudController(MaterialTypeCrudController::class)->setFormTypeOption('by_reference', false);
-        yield AssociationField::new('budget');
+        yield AssociationField::new('budget')->onlyOnForms();
 
-        yield TextField::new('InventoryNumber','Stock');
+        yield TextField::new('InventoryNumber','Stock')->onlyOnForms();;
 
-        yield TextField::new('BCnumber', 'nombre BC');
-        yield TextField::new('link','Lien');
+        yield TextField::new('BCnumber', 'nombre BC')->onlyOnForms();
+        yield TextField::new('link','Lien')->onlyOnForms();
 
     }
 
