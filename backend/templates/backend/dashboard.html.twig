@@ -19,7 +19,7 @@
 						<div class="card-body">
 							<h5 class="card-title">
 								Nombre de matériel
-								{{materialCount}}
+								
 							</h5>
 							<p class="display-5" id="countMaterials">
 								0
@@ -29,7 +29,7 @@
 					<div class="card m-5" style="width: 18rem;">
 						<div class="card-body">
 							<h5 class="card-title">
-								Nombre de réservation {{reservationCount}}
+								Nombre de réservation
 							</h5>
 							<p class="display-5" id="getTotalReservations">
 								0
@@ -93,14 +93,14 @@ function updateValue() {
 if (currentValue <= finalValue) {
 countMaterials.innerHTML = currentValue;
 currentValue++;
-setTimeout(updateValue, 1);
+setTimeout(updateValue, 10);
 }
 }
 function updateValueReser() {
 if (currentValueReser <= finalValueReser) {
 getTotalReservations.innerHTML = currentValueReser;
 currentValueReser++;
-setTimeout(updateValueReser, 1);
+setTimeout(updateValueReser, 10);
 }
 }
 
@@ -200,14 +200,14 @@ function updateValue() {
 if (currentValue <= finalValue) {
 countMaterials.innerHTML = currentValue;
 currentValue++;
-setTimeout(updateValue, 150);
+setTimeout(updateValue, 10);
 }
 }
 function updateValueReser() {
 if (currentValueReser <= finalValueReser) {
 getTotalReservations.innerHTML = currentValueReser;
 currentValueReser++;
-setTimeout(updateValueReser, 150);
+setTimeout(updateValueReser, 10);
 }
 }
 

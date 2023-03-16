@@ -56,7 +56,7 @@ return $this->render('backend/dashboard.html.twig', [
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+        yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-home');
 
         $isAdmin = $this->isGranted('ROLE_ADMIN');
         yield MenuItem::section('Administration');

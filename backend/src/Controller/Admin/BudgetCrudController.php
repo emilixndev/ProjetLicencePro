@@ -35,4 +35,21 @@ class BudgetCrudController extends AbstractCrudController
         yield TextField::new('name','Nom');
         yield TextareaField::new('description','Description');
     }
+
+
+
+
+    public function configureActions(Actions $actions): Actions
+    {
+        $actions->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+            return $action->displayIf(function (Budget $budget){
+                if(count($budget->getMaterial())===0){
+                    return true;
+                }
+                return false;
+            });
+            return $action;
+        });
+        return $actions;
+    }
 }

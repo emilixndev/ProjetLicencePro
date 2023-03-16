@@ -14,7 +14,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 
-
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
@@ -24,6 +24,15 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 
 class UserCrudController extends AbstractCrudController
 {
+
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+
 
     public static function getEntityFqcn(): string
     {
@@ -44,6 +53,20 @@ class UserCrudController extends AbstractCrudController
 
     }
 
+    private function hashPassword($entity)
+    {
+        $plainPassword = $entity->getPassword();
+        if (!empty($plainPassword)) {
+            $hashedPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
+            $entity->setPassword($hashedPassword);
+        }
+
+    }
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        $this->hashPassword($entityInstance);
+        parent::persistEntity($entityManager, $entityInstance);
+    }
 
     public function configureFilters(Filters $filters): Filters
     {
@@ -65,7 +88,7 @@ class UserCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
-        $impersonate = Action::new('impersonate', 'Impersonate')
+        $impersonate = Action::new('impersonate', 'Personnification')
             ->linkToUrl(function (User $user): string {
                 return '?_switch_user=' . $user->getEmail();
             });

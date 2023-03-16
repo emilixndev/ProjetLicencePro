@@ -91,7 +91,7 @@ class ReservationCrudController extends AbstractCrudController
         yield DateField::new('startDate','Date de début');
         yield DateField::new('endDate','Date de fin');
         yield TextField::new('emailBorrower',"Email de l'emprunteur");
-        yield TextField::new('statut',"Statut de l'emprunteur");
+        yield TextField::new('statutBorrower',"Statut de l'emprunteur");
         yield AssociationField::new('material', 'Matériel')->formatValue(function ($value, $entity) {
             return $entity->getMaterial()->getName();
         });
