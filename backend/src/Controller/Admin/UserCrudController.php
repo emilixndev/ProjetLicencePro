@@ -7,15 +7,12 @@ use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
-use Symfony\Component\Security\Core\Security;
 
 
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -28,33 +25,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 class UserCrudController extends AbstractCrudController
 {
 
-
-
-
-
-    private $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
     public static function getEntityFqcn(): string
     {
         return User::class;
     }
 
-    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
-    {
-        $this->hashPassword($entityInstance);
-        parent::persistEntity($entityManager, $entityInstance);
-    }
-
-    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
-    {
-        $this->hashPassword($entityInstance);
-        parent::updateEntity($entityManager, $entityInstance);
-    }
     public function configureCrud(Crud $crud): Crud
     {
         $crud
@@ -68,15 +43,7 @@ class UserCrudController extends AbstractCrudController
         return $crud;
 
     }
-    private function hashPassword($entity)
-    {
-        $plainPassword = $entity->getPassword();
-        if (!empty($plainPassword)) {
-            $hashedPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
-            $entity->setPassword($hashedPassword);
-        }
 
-    }
 
     public function configureFilters(Filters $filters): Filters
     {
@@ -105,6 +72,10 @@ class UserCrudController extends AbstractCrudController
         if ($this->isGranted("ROLE_ADMIN")) {
             $actions->add(Crud::PAGE_INDEX, $impersonate);
         }
+
+
+        $actions->setPermission(Action::SAVE_AND_RETURN,'ROLE_ADMIN');
+
 
         return $actions;
     }
