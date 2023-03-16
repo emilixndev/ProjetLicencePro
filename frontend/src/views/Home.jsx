@@ -124,8 +124,6 @@ const Home = () => {
               pages[pageIndex].map((item) => {
                 return (
                   <Link key={item.id} to={"/product/" + item.id}>
-                    {" "}
-                    {/**A remplacer par un id */}
                     <ProductCard
                       name={item.name}
                       image={
