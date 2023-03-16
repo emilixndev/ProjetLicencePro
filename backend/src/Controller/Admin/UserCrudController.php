@@ -7,15 +7,12 @@ use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
-use Symfony\Component\Security\Core\Security;
 
 
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -24,47 +21,29 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 
 
+
 class UserCrudController extends AbstractCrudController
 {
-    private $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
 
     public static function getEntityFqcn(): string
     {
         return User::class;
     }
 
-    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
-    {
-        $this->hashPassword($entityInstance);
-        parent::persistEntity($entityManager, $entityInstance);
-    }
-
-    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
-    {
-        $this->hashPassword($entityInstance);
-        parent::updateEntity($entityManager, $entityInstance);
-    }
     public function configureCrud(Crud $crud): Crud
     {
         $crud
-            ->showEntityActionsInlined(true);
+            ->showEntityActionsInlined(true)
+            ->setEntityLabelInSingular('utilisateur')
+            ->setEntityLabelInPlural('utilisateurs')
+            ->setPageTitle('index', 'Gestion des utilisateurs')
+            ->setPageTitle('edit', 'Modifier un utilisateur')
+            ->setPageTitle('new', 'Créer un nouveau utilisateur')
+            ->setPageTitle("detail","Détails de l'utilisateur");
         return $crud;
 
     }
-    private function hashPassword($entity)
-    {
-        $plainPassword = $entity->getPassword();
-        if (!empty($plainPassword)) {
-            $hashedPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
-            $entity->setPassword($hashedPassword);
-        }
 
-    }
 
     public function configureFilters(Filters $filters): Filters
     {
@@ -94,6 +73,10 @@ class UserCrudController extends AbstractCrudController
             $actions->add(Crud::PAGE_INDEX, $impersonate);
         }
 
+
+        $actions->setPermission(Action::SAVE_AND_RETURN,'ROLE_ADMIN');
+
+
         return $actions;
     }
 
@@ -104,10 +87,10 @@ class UserCrudController extends AbstractCrudController
 
         yield TextField::new('password')->onlyWhenCreating();
 
-        yield TextField::new('firstname');
-        yield TextField::new('lastname');
+        yield TextField::new('firstName','Prénom');
+        yield TextField::new('lastName','Nom');
         yield TextField::new('tel');
-        yield ChoiceField::new('roles')
+        yield ChoiceField::new('roles','Roles')
             ->setChoices([
                 'Admin' => 'ROLE_ADMIN',
                 'Owner' => 'ROLE_OWNER',
@@ -128,6 +111,10 @@ class UserCrudController extends AbstractCrudController
         }
         throw new \Exception("Non autorisé");
     }
+
+
+
+    
 
 
 }

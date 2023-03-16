@@ -1,14 +1,14 @@
-import React from "react";
-import Navbar from "../components/Navbar";
+import React, { useEffect } from "react";
 import "rsuite/dist/rsuite.min.css";
 import { DateRangePicker } from "rsuite";
 import { useParams } from "react-router";
 import { useState } from "react";
-import { useEffect } from "react";
 import client from "../services/axios";
 import imageDefault from "../assets/default-image.jpg";
 import "reactjs-popup/dist/index.css";
 import Popup from "reactjs-popup";
+import Navbar from "../components/Navbar";
+import ImageSlider from "../components/ImageSlider";
 
 const Product = () => {
   const [product, setProduct] = useState({});
@@ -40,11 +40,28 @@ const Product = () => {
       console.log("error on products fetch", error);
     }
   };
+  const addImagePathToObjectArray = (objArray, imagePath) => {
+    return objArray.map((obj) => {
+      return { path: `${imagePath}/${obj.path}` };
+    });
+  };
+  const fetchImages = async () => {
+    if (product.imgMaterials) {
+      setImages(
+        addImagePathToObjectArray(
+          product.imgMaterials,
+          "http://127.0.0.1:8000/images/material/"
+        )
+      );
+    }
+  };
   useEffect(() => {
     fetchProduct();
   }, [id]);
   useEffect(() => {
-    console.log("product", product);
+    console.log("product", product.imgMaterials);
+    fetchImages();
+    console.log("images", images);
   }, [product]);
 
   const handleOk = async (date) => {
@@ -107,17 +124,11 @@ const Product = () => {
     <div className="p-3 bg-[#FAFAFA] min-h-screen">
       <Navbar />
       <main className="mt-24 px-14 flex flex-col gap-16">
-        <div className="flex flex-col md:flex-row gap-3 md:gap-10">
-          {product?.imgMaterials?.length > 0 ? (
-            <img
-              className="md:w-1/2"
-              src={`http://localhost:8000/images/material/${product.imgMaterials[0].path}`}
-            />
+        <div className="flex gap-10">
+          {product.imgMaterials ? (
+            <ImageSlider images={images} />
           ) : (
-            <img
-              className="md:w-1/2"
-              src="https://cdn.lesnumeriques.com/optim/product/59/59017/f5edcc82-quest-2__450_400.jpeg"
-            />
+            <p>loading</p>
           )}
           {Object.keys(product).length !== 0 ? (
             <div className="flex flex-col gap-3 pt-3 md:w-1/2">

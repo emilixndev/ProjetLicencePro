@@ -38,12 +38,12 @@ class SupplierCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
 
-        yield TextField::new('name');
-        yield TextField::new('address');
-        yield TextField::new('postalCode');
-        yield TextField::new('city');
-        yield EmailField::new('email');
-        yield TextField::new('phone');
+        yield TextField::new('name','Nom');
+        yield TextField::new('address',"Adresse");
+        yield TextField::new('postalCode','Code postal');
+        yield TextField::new('city','Ville');
+        yield EmailField::new('email','Email');
+        yield TextField::new('phone','Tel');
 
 
     }
@@ -51,7 +51,13 @@ class SupplierCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         $crud
-            ->showEntityActionsInlined(true);
+            ->showEntityActionsInlined(true)
+            ->setEntityLabelInSingular('Fournisseur')
+            ->setEntityLabelInPlural('Fournisseurs')
+            ->setPageTitle('index', 'Gestion des fournisseurs')
+            ->setPageTitle('edit', 'Modifier un fournisseur')
+            ->setPageTitle('new', 'Créer un nouveau fournisseur')
+            ->setPageTitle('detail','Détails du fournisseur');
 
         return $crud;
 

@@ -17,14 +17,19 @@ class MaterialTypeCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         $crud
-            ->showEntityActionsInlined(true);
+            ->showEntityActionsInlined(true)
+            ->setEntityLabelInSingular('Type de matériel')
+            ->setPageTitle('index', 'Gestion des types de matériel')
+            ->setPageTitle('edit', 'Modifier un type de matériel')
+            ->setPageTitle('new', 'Créer un nouveau type de matériel')
+            ->setPageTitle('detail', 'Détails du type de matériel');
         return $crud;
 
     }
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('name');
+        yield TextField::new('name','Nom');
     }
 
 }

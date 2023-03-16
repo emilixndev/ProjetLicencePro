@@ -50,7 +50,13 @@ class MaterialCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         $crud
-            ->showEntityActionsInlined(true);
+            ->showEntityActionsInlined(true)
+            ->setEntityLabelInSingular('Matériel')
+            ->setEntityLabelInPlural('Matériels')
+            ->setPageTitle('index', 'Gestion des matériels')
+            ->setPageTitle('edit', 'Modifier un matériel')
+            ->setPageTitle('new', 'Créer un nouveau matériel')
+            ->setPageTitle('detail','Détails du matériel');
 
         return $crud;
 
@@ -98,8 +104,8 @@ class MaterialCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield BooleanField::new('isAvailable');
-        yield TextField::new('name');
+        yield BooleanField::new('isAvailable','Disponible');
+        yield TextField::new('name','Nom');
         yield TextareaField::new('description')->hideOnIndex();
         yield AssociationField::new('supplier', 'Fournisseur')->formatValue(function ($value, $entity) {
             return $entity->getSupplier()->getName();
@@ -120,16 +126,16 @@ class MaterialCrudController extends AbstractCrudController
                 }])->onlyOnForms();
         }
 
-        yield CollectionField::new('ImgMaterials')
+        yield CollectionField::new('ImgMaterials','Images')
             ->setEntryType(MaterialImgType::class)
             ->onlyOnForms();
-        yield CollectionField::new('ImgMaterials')
+        yield CollectionField::new('ImgMaterials','Images')
             ->onlyOnDetail()
             ->setTemplatePath("backend/custom/imgMaterials.html.twig");
 
 
-        yield DateField::new('deleveryDate');
-        yield DateField::new('endOfGuarantyDate');
+        yield DateField::new('deleveryDate', 'Date de début de garantie');
+        yield DateField::new('endOfGuarantyDate','Date de fin de garantie');
 
         yield AssociationField::new('brand', 'Marque');
         yield AssociationField::new('materialTypes', 'Type de matériel')
@@ -143,10 +149,10 @@ class MaterialCrudController extends AbstractCrudController
             ->setCrudController(MaterialTypeCrudController::class)->setFormTypeOption('by_reference', false);
         yield AssociationField::new('budget');
 
-        yield TextField::new('InventoryNumber');
+        yield TextField::new('InventoryNumber','Stock');
 
-        yield TextField::new('BCnumber', 'BC number');
-        yield TextField::new('link');
+        yield TextField::new('BCnumber', 'nombre BC');
+        yield TextField::new('link','Lien');
 
     }
 

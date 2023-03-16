@@ -37,7 +37,13 @@ class ReservationCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         $crud
-            ->showEntityActionsInlined(true);
+            ->showEntityActionsInlined(true)
+            ->setEntityLabelInSingular('Réservation')
+            ->setEntityLabelInPlural('Réservations')
+            ->setPageTitle('index', 'Gestion des réservations')
+            ->setPageTitle('edit', 'Modifier une réservation')
+            ->setPageTitle('new', 'Créer une nouvelle réservation')
+            ->setPageTitle("detail","Détails d'une réservation");
         return $crud;
 
     }
@@ -80,12 +86,12 @@ class ReservationCrudController extends AbstractCrudController
     {
 
 
-        yield TextField::new('firstName');
-        yield TextField::new('LastName');
-        yield DateField::new('startDate');
-        yield DateField::new('endDate');
-        yield TextField::new('emailBorrower');
-        yield TextField::new('statutBorrower');
+        yield TextField::new('firstName','Prénom');
+        yield TextField::new('lastName','Nom');
+        yield DateField::new('startDate','Date de début');
+        yield DateField::new('endDate','Date de fin');
+        yield TextField::new('emailBorrower',"Email de l'emprunteur");
+        yield TextField::new('statut',"Statut de l'emprunteur");
         yield AssociationField::new('material', 'Matériel')->formatValue(function ($value, $entity) {
             return $entity->getMaterial()->getName();
         });
