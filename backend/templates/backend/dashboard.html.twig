@@ -237,8 +237,8 @@ function updateValue(elementId, finalValue) {
   update();
 }
 
-updateValue("countMaterials", {{ materialCount }});
-updateValue("getTotalReservations", {{ reservationCount }});
+updateValue("countMaterials", {{ app.user.countMaterials() }});
+updateValue("getTotalReservations", {{ app.user.getTotalReservations() }});
 updateValue("getTotalBudget", {{ budgetCount }});
 updateValue("getTotalCat", {{ catCount }});
 updateValue("getTotalBrand", {{ brandCount }});
