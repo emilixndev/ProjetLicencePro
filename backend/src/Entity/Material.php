@@ -33,6 +33,7 @@ class Material
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(["read:materials"])]
     private ?bool $isAvailable = null;
 
     #[ORM\ManyToOne(inversedBy: 'materials')]

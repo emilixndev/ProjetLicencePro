@@ -3,132 +3,133 @@
 
 
 	{% if is_granted('ROLE_ADMIN') %}
-		<div class="ml-5 d-flex">
-			<div class=" align-items-center" style="width:50%">
-				<div style="width:200px; margin-left:50px">
-					<p class="m-0 font-weight-bold text-primary" style="font-size:25px;">
-						{{ app.user.getEmail() }}
+	<div class="ml-5 row">
+	<div class=" align-items-center col-12 col-md-12">
+		<div class="pb-3 d-flex justify-content-center">
+			<h1 style="">Bonjour ! <span style="color:#5368D5!important">{{ app.user.getLastName() }}
+			{{ app.user.getFirstName() }}</span></h1>
+		</div>
+		<div class="d-flex flex-column flex-md-row justify-content-center align-items-center">
+			<div class="card  mb-3 m-1 m-md-2" style="width: 18rem;">
+				<div class="card-body">
+					<h5 class="card-title">
+						Nombre de matériel
+					</h5>
+					<p class="display-5 text-primary" id="countMaterials" style="font-weight: 500;font-family:Arial, Helvetica, sans-serif;color:#5368D5!important">
+						0
 					</p>
-					<p class="m-0 font-weight-bold text-primary" style="font-size:18px;">
-						{{ app.user.getLastName() }}
-						{{ app.user.getFirstName() }}
-					</p>
-				</div>
-				<div class="d-flex">
-					<div class="card m-5" style="width: 18rem;">
-						<div class="card-body">
-							<h5 class="card-title">
-								Nombre de matériel
-								
-							</h5>
-							<p class="display-5" id="countMaterials">
-								0
-							</p>
-						</div>
-					</div>
-					<div class="card m-5" style="width: 18rem;">
-						<div class="card-body">
-							<h5 class="card-title">
-								Nombre de réservation
-							</h5>
-							<p class="display-5" id="getTotalReservations">
-								0
-							</p>
-						</div>
-					</div>
 				</div>
 			</div>
-			<div style="width:50%" class="d-flex justify-content-center">
-				<div class="" style="width: 18rem;">
-					<div class="card-body">
-						<canvas id="myChart" width="400" height="400"></canvas>
-					</div>
+			<div class="card mb-3 m-1 m-md-2" style="width: 18rem;">
+				<div class="card-body">
+					<h5 class="card-title">
+					Nombre total de matériel
+					</h5>
+					<p class="display-5 text-primary" id="getTotalMaxMat" style="font-weight: 500;font-family:Arial, Helvetica, sans-serif;color:#5368D5!important">
+						0
+					</p>
+				</div>
+			</div>
+			<div class="card  mb-3 m-1 m-md-2" style="width: 18rem;">
+				<div class="card-body">
+					<h5 class="card-title">
+						Nombre de budget
+					</h5>
+					<p class="display-5" id="getTotalBudget" style="font-weight: 500;font-family:Arial, Helvetica, sans-serif;color:#5368D5!important">
+						0
+					</p>
 				</div>
 			</div>
 		</div>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
-		<script>
-			// Récupérer les données pour le graphique
-var data = {
-labels: [
-'Matériel réservé', 'Matériel non réservé'
-],
-datasets: [
-{
-data: [
-{{ reservationCount }},
-{{ materialCount }} - {{ reservationCount }}
-],
-backgroundColor: ['rgb(54, 162, 235)', 'rgb(58, 64, 90)']
-},
-]
-};
-
-// Créer le graphique de type Doughnut
-var myChart = new Chart(document.getElementById('myChart'), {
-type: 'doughnut',
-data: data,
-options: {
-responsive: true,
-maintainAspectRatio: false
-}
-});
-
-
-let finalValueReser = {{ reservationCount }};
-
-console.log(finalValueReser)
-
-window.addEventListener("load", () => {
-let getTotalReservations = document.getElementById("getTotalReservations");
-let countMaterials = document.getElementById("countMaterials");
-
-let currentValue = 0;
-
-let currentValueReser = 0;
-let finalValue = {{ materialCount }};
-
-
-function updateValue() {
-if (currentValue <= finalValue) {
-countMaterials.innerHTML = currentValue;
-currentValue++;
-setTimeout(updateValue, 10);
-}
-}
-function updateValueReser() {
-if (currentValueReser <= finalValueReser) {
-getTotalReservations.innerHTML = currentValueReser;
-currentValueReser++;
-setTimeout(updateValueReser, 10);
-}
-}
-
-updateValueReser();
-updateValue();
-});
-		</script>
-
-
-	{% else %}
-		<div class="ml-5 row">
-			<div class=" align-items-center col-12 col-md-6">
-				<div class="px-2 pb-3" style="width:200px;">
-					<p class="m-0 font-weight-bold text-primary" style="font-size:25px;">
-						{{ app.user.getEmail() }}
-					</p>
-					<p class="m-0 font-weight-bold text-primary" style="font-size:18px;">
-						{{ app.user.getLastName() }}
-						{{ app.user.getFirstName() }}
+		<div class="d-flex flex-column flex-md-row justify-content-center align-items-center">
+			<div class="card mb-3 m-1 m-md-2" style="width: 18rem;">
+				<div class="card-body">
+					<h5 class="card-title">
+					Nombre de catégorie
+					</h5>
+					<p class="display-5 text-primary" id="getTotalCat" style="font-weight: 500;font-family:Arial, Helvetica, sans-serif;color:#5368D5!important">
+						0
 					</p>
 				</div>
-				<div class="d-flex">
+			</div>
+			<div class="card mb-3 m-1 m-md-2" style="width: 18rem;">
+				<div class="card-body">
+					<h5 class="card-title">
+						Nombre de marque
+					</h5>
+					<p class="display-5" id="getTotalBrand" style="font-weight: 500;font-family:Arial, Helvetica, sans-serif;color:#5368D5!important">
+						0
+					</p>
+				</div>
+			</div>
+			<div class="card mb-3 m-1 m-md-2" style="width: 18rem;">
+			<div class="card-body">
+				<h5 class="card-title">
+					Nombre d'utilisateur
+				</h5>
+				<p class="display-5" id="getTotalUser" style="font-weight: 500;font-family:Arial, Helvetica, sans-serif;color:#5368D5!important">
+					0
+				</p>
+			</div>
+		</div>
+		
+		
+		
+		</div>
+	</div>
+	<div class="d-flex justify-content-center col-12 col-md-6">
+		
+	</div>
+</div>
+<script>
+	// Récupérer les données pour le graphique
+
+
+
+
+
+window.addEventListener("load", () => {
+
+
+function updateValue(elementId, finalValue) {
+let element = document.getElementById(elementId);
+let currentValue = 0;
+
+function update() {
+if (currentValue <= finalValue) {
+element.innerHTML = currentValue;
+currentValue++;
+setTimeout(update, 10);
+}
+}
+
+update();
+}
+
+updateValue("countMaterials", {{  app.user.countMaterials() }});
+updateValue("getTotalBudget", {{ budgetCount }});
+updateValue("getTotalCat", {{ catCount }});
+updateValue("getTotalBrand", {{ brandCount }});
+updateValue("getTotalUser", {{ userCount }});
+updateValue("getTotalMaxMat", {{ materialCount }});
+
+
+});
+</script>
+	{% else %}
+		<div class="ml-5 row">
+			<div class=" align-items-center col-12 col-md-12">
+				<div class="pb-3 d-flex justify-content-center">
+					<h1 style="">Bonjour ! <span style="color:#5368D5!important">{{ app.user.getLastName() }}
+					{{ app.user.getFirstName() }}</span></h1>
+				</div>
+				<div class="d-flex justify-content-center">
 					<div class="card m-1 m-md-2" style="width: 18rem;">
 						<div class="card-body">
 							<h5 class="card-title">
 								Nombre de matériel
 							</h5>
-							<p class="display-5 text-primary" id="countMaterials">
+							<p class="display-5 text-primary" id="countMaterials" style="font-weight: 500;font-family:Arial, Helvetica, sans-serif;color:#5368D5!important">
 								0
 							</p>
 						</div>
@@ -136,85 +137,76 @@ updateValue();
 					<div class="card m-1 m-md-2" style="width: 18rem;">
 						<div class="card-body">
 							<h5 class="card-title">
-								Nombre de réservation
+								Nombre de budget
 							</h5>
-							<p class="display-5" id="getTotalReservations">
+							<p class="display-5" id="getTotalBudget" style="font-weight: 500;font-family:Arial, Helvetica, sans-serif;color:#5368D5!important">
 								0
 							</p>
 						</div>
 					</div>
+				</div>
+				<div class="d-flex justify-content-center">
+					<div class="card m-1 m-md-2" style="width: 18rem;">
+						<div class="card-body">
+							<h5 class="card-title">
+							Nombre de catégorie
+							</h5>
+							<p class="display-5 text-primary" id="getTotalCat" style="font-weight: 500;font-family:Arial, Helvetica, sans-serif;color:#5368D5!important">
+								0
+							</p>
+						</div>
+					</div>
+					<div class="card m-1 m-md-2" style="width: 18rem;">
+						<div class="card-body">
+							<h5 class="card-title">
+								Nombre de marque
+							</h5>
+							<p class="display-5" id="getTotalBrand" style="font-weight: 500;font-family:Arial, Helvetica, sans-serif;color:#5368D5!important">
+								0
+							</p>
+						</div>
+					</div>
+				
 				</div>
 			</div>
 			<div class="d-flex justify-content-center col-12 col-md-6">
-				<div class="" style="width: 18rem;">
-					<div class="card-body d-flex justify-content-center">
-						<canvas id="myChart" width="400" height="400"></canvas>
-					</div>
-				</div>
+				
 			</div>
 		</div>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
 		<script>
 			// Récupérer les données pour le graphique
-var data = {
-labels: [
-'Matériel réservé', 'Matériel non réservé'
-],
-datasets: [
-{
-data: [
-{{ app.user.getTotalReservations() }},
-{{ app.user.countMaterials }} - {{ app.user.getTotalReservations() }}
-],
-backgroundColor: ['rgb(54, 162, 235)', 'rgb(58, 64, 90)']
-},
-]
-};
-
-// Créer le graphique de type Doughnut
-var myChart = new Chart(document.getElementById('myChart'), {
-type: 'doughnut',
-data: data,
-options: {
-responsive: true,
-maintainAspectRatio: false
-}
-});
 
 
-let finalValueReser = {{ app.user.getTotalReservations }};
 
-console.log(finalValueReser)
+
+
+
 
 window.addEventListener("load", () => {
-let getTotalReservations = document.getElementById("getTotalReservations");
-let countMaterials = document.getElementById("countMaterials");
-
-let currentValue = 0;
-
-let currentValueReser = 0;
-let finalValue = {{ app.user.countMaterials }};
 
 
-function updateValue() {
-if (currentValue <= finalValue) {
-countMaterials.innerHTML = currentValue;
-currentValue++;
-setTimeout(updateValue, 10);
-}
-}
-function updateValueReser() {
-if (currentValueReser <= finalValueReser) {
-getTotalReservations.innerHTML = currentValueReser;
-currentValueReser++;
-setTimeout(updateValueReser, 10);
-}
+function updateValue(elementId, finalValue) {
+  let element = document.getElementById(elementId);
+  let currentValue = 0;
+  
+  function update() {
+    if (currentValue <= finalValue) {
+      element.innerHTML = currentValue;
+      currentValue++;
+      setTimeout(update, 10);
+    }
+  }
+  
+  update();
 }
 
-updateValueReser();
-updateValue();
+updateValue("countMaterials", {{ app.user.countMaterials() }});
+updateValue("getTotalBudget", {{ budgetCount }});
+updateValue("getTotalCat", {{ catCount }});
+updateValue("getTotalBrand", {{ brandCount }});
+
 });
-		</script>
+</script>
 	{% endif %}
 
 

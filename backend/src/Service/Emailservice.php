@@ -32,7 +32,7 @@ class Emailservice
                     ],
                     'To' => [
                         [
-                            'Email' => $reservation->getEmailBorrower(),
+                            'Email' => 'emilien.muck@gmail.com',
                         ]
                     ],
                     'TemplateID' => 4647061,
