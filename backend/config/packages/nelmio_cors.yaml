@@ -3,7 +3,7 @@ nelmio_cors:
         '^/api/':
             origin_regex: true
             allow_credentials: true
-            allow_origin: ['https://labstock.cosar.etu.mmi-unistra.fr'] # You probably want to change this regex to match your real domain
+            allow_origin: ['https://labstock.cosar.etu.mmi-unistra.fr','^http://localhost:[0-9]+'] # You probably want to change this regex to match your real domain
             allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
             allow_headers: ['Content-Type', 'Authorization']
             expose_headers: ['Link']
