@@ -53,6 +53,7 @@ const Sidebar = (props) => {
     console.log("******", e.target.nextSibling.innerText);
     const selected = e.target.nextSibling.innerText;
     setSelectedCat(selected);
+    console.log("categories", categories);
     setCategories((value) => {
       const newData = [...value];
       console.log("newData", newData);
@@ -102,102 +103,157 @@ const Sidebar = (props) => {
       setSelectedBrand((value) => value.filter((item) => item !== selected));
     }
   };
+  const handleKeyDownCat = (e) => {
+    if (e.key === "Enter") {
+      toggleCat();
+    }
+  };
+  const handleKeyDownBrand = (e) => {
+    if (e.key === "Enter") {
+      toggleBrand();
+    }
+  };
+  const handleKeyDownInput = (e) => {
+    if (e.key === "Enter") {
+      console.log(e.target.nextSibling.innerText);
+      setSelectedCat(e.target.nextSibling.innerText);
+      e.target = true;
+      console.log("e", e);
+      setCategories((value) => {
+        const newData = [...value];
+        console.log("newData", newData);
+        newData.forEach((cat) => {
+          if (cat.name === e.nativeEvent.target.nextSibling.innerText) {
+            cat.checked = true;
+          } else {
+            cat.checked = false;
+          }
+        });
+        return newData;
+      });
+    }
+  };
+  const handleKeyDownInputBrand = (e) => {
+    if (e.key === "Enter") {
+      console.log(e.target.nextSibling.innerText);
+      setSelectedBrand((value) => [...value, e.target.nextSibling.innerText]);
+      e.target = true;
+      console.log("e", e);
+      setBrands((value) => {
+        const newData = [...value];
+        newData.forEach((brand) => {
+          if (brand.name === e.nativeEvent.target.nextSibling.innerText) {
+            brand.checked = true;
+          }
+        });
+        return newData;
+      });
+    }
+  };
   return (
-    <ul
-      className=" w-56 shadow-xl pt-[50px] fixed h-full mt-16 overflow-auto pb-4"
-      style={{ height: "calc(100% - 4.5rem)" }}
-    >
-      <li className="text-xs text-gray-400 px-4">Filtrer par</li>
-      <hr className="my-2" />
-      <li className="overflow-auto max-h-96">
-        <p className="px-4">Filtres actifs</p>
-        <div className="px-4">
-          {selectedCat !== "All" ? (
-            <p className="p-2 badge m-1">{selectedCat}</p>
-          ) : null}
-          {selectedBrand.map((brand, i) => (
-            <p className="p-2 badge m-1" key={i}>
-              {brand}
-            </p>
-          ))}
-        </div>
-      </li>
+      <ul
+          className=" w-56 shadow-xl pt-[50px] fixed h-full mt-16 overflow-auto pb-4"
+          style={{ height: "calc(100% - 4.5rem)" }}
+      >
+        <li className="text-xs text-gray-400 px-4">Filtrer par</li>
+        <hr className="my-2" />
+        <li className="overflow-auto max-h-96">
+          <p className="px-4">Filtres actifs</p>
+          <div className="px-4">
+            {selectedCat !== "All" ? (
+                <p className="p-2 badge m-1">{selectedCat}</p>
+            ) : null}
+            {selectedBrand.map((brand, i) => (
+                <p className="p-2 badge m-1" key={i}>
+                  {brand}
+                </p>
+            ))}
+          </div>
+        </li>
 
-      <hr className="my-2" />
-      <li className="overflow-auto max-h-96">
-        <div
-          className="flex items-center justify-between px-4 sticky bg-[#FAFAFA] top-0"
-          onClick={toggleCat}
-        >
-          <p className="text-base">Catégorie</p>
-          <FontAwesomeIcon
-            icon={faChevronDown}
-            className={`${openCat ? "rotate-180" : ""}`}
-          />
-        </div>
-        <div className={`${openCat ? "h-fit" : "h-0 overflow-hidden"} px-4`}>
-          <ul className={`${openCat ? "block" : "hidden"}`}>
-            {categories.map((item) => {
-              return (
-                <div className="form-control" key={item.id}>
-                  <label
-                    className="label cursor-pointer justify-start gap-2"
-                    htmlFor="category"
-                  >
-                    <input
-                      type="radio"
-                      className="radio radio-primary"
-                      name="category"
-                      onChange={handleCat}
-                      checked={item.checked}
-                    />
-                    <span className="label-text text-neutral">{item.name}</span>
-                  </label>
-                </div>
-              );
-            })}
-          </ul>
-        </div>
         <hr className="my-2" />
-      </li>
-      <li className="overflow-auto max-h-96">
-        <div
-          className="flex items-center justify-between sticky bg-[#FAFAFA] top-0 px-4"
-          onClick={toggleBrand}
-        >
-          <p className="text-base">Marque</p>
-          <FontAwesomeIcon
-            icon={faChevronDown}
-            className={`${openBrand ? "rotate-180" : ""}`}
-          />
-        </div>
-        <div className={`${openBrand ? "h-fit" : "h-0 overflow-hidden"} px-4`}>
-          <ul className={`${openBrand ? "block" : "hidden"} px-4`}>
-            {brands.map((item) => {
-              return (
-                <div className="form-control" key={item.id}>
-                  <label className="label cursor-pointer justify-start gap-2">
-                    <input
-                      type="checkbox"
-                      className="checkbox checkbox-primary"
-                      onChange={handleBrand}
-                      checked={item.checked}
-                    />
-                    <span className="label-text text-neutral">{item.name}</span>
-                  </label>
-                </div>
-              );
-            })}
-          </ul>
-        </div>
-        <hr className="my-2" />
-      </li>
-      <li>
-        <button className="btn btn-primary mx-4" onClick={eraseFilters}>
-          Effacer tous les filtres
-        </button>
-      </li>
-    </ul>
+        <li className="overflow-auto max-h-96">
+          <div
+              className="flex items-center justify-between px-4 sticky bg-[#FAFAFA] top-0"
+              onClick={toggleCat}
+          >
+            <p className="text-base" tabIndex={0} onKeyDown={handleKeyDownCat}>
+              Catégorie
+            </p>
+            <FontAwesomeIcon
+                icon={faChevronDown}
+                className={`${openCat ? "rotate-180" : ""}`}
+            />
+          </div>
+          <div className={`${openCat ? "h-fit" : "h-0 overflow-hidden"} px-4`}>
+            <ul className={`${openCat ? "block" : "hidden"}`}>
+              {categories.map((item) => {
+                return (
+                    <div className="form-control" key={item.id}>
+                      <label
+                          className="label cursor-pointer justify-start gap-2"
+                          htmlFor="category"
+                      >
+                        <input
+                            type="radio"
+                            className="radio radio-primary"
+                            name="category"
+                            onChange={handleCat}
+                            checked={item.checked}
+                            onKeyDown={handleKeyDownInput}
+                            tabIndex={0}
+                        />
+                        <span className="label-text text-neutral">{item.name}</span>
+                      </label>
+                    </div>
+                );
+              })}
+            </ul>
+          </div>
+          <hr className="my-2" />
+        </li>
+        <li className="overflow-auto max-h-96">
+          <div
+              className="flex items-center justify-between sticky bg-[#FAFAFA] top-0 px-4"
+              onClick={toggleBrand}
+          >
+            <p className="text-base" tabIndex={0} onKeyDown={handleKeyDownBrand}>
+              Marque
+            </p>
+            <FontAwesomeIcon
+                icon={faChevronDown}
+                className={`${openBrand ? "rotate-180" : ""}`}
+            />
+          </div>
+          <div className={`${openBrand ? "h-fit" : "h-0 overflow-hidden"} px-4`}>
+            <ul className={`${openBrand ? "block" : "hidden"} px-4`}>
+              {brands.map((item) => {
+                return (
+                    <div className="form-control" key={item.id}>
+                      <label className="label cursor-pointer justify-start gap-2">
+                        <input
+                            type="checkbox"
+                            className="checkbox checkbox-primary"
+                            onChange={handleBrand}
+                            checked={item.checked}
+                            onKeyDown={handleKeyDownInputBrand}
+                            tabIndex={0}
+                        />
+                        <span className="label-text text-neutral">{item.name}</span>
+                      </label>
+                    </div>
+                );
+              })}
+            </ul>
+          </div>
+          <hr className="my-2" />
+        </li>
+        <li>
+          <button className="btn btn-primary mx-4" onClick={eraseFilters}>
+            Effacer tous les filtres
+          </button>
+        </li>
+      </ul>
   );
 };
 

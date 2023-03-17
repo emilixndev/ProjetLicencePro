@@ -61,7 +61,6 @@ const Home = () => {
     if (selectedCat === "All") {
       const numPages = Math.ceil(products.length / 9);
       setNumberOfPages(numPages);
-
       let pagesArray = [];
       for (let i = 0; i < numPages; i++) {
         pagesArray.push(paginate(products, i, 9));
@@ -69,16 +68,16 @@ const Home = () => {
       setProducts(products);
       setPages(pagesArray);
     } else {
+      console.log("selectedCatdsfdfgd", selectedCat);
       const result = products.filter((product) => {
         return product.materialTypes[0].name === selectedCat;
       });
-
-      console.log("result", result);
-      setProducts(result);
       setPages([result]);
       const numPages = Math.ceil(pages.length / 9);
       setNumberOfPages(numPages);
-      console.log("pages", pages, pageIndex);
+      // const numPages = Math.ceil(pages.length / 9);
+      // setNumberOfPages(numPages);
+      // console.log("pages", pages, pageIndex);
     }
   };
   const filterProductsByBrand = () => {
@@ -108,9 +107,6 @@ const Home = () => {
     fetchProducts();
   }, []);
   useEffect(() => {
-    console.log("productsHOME", products);
-  }, [products]);
-  useEffect(() => {
     filterProducts();
   }, [selectedCat, products]);
   useEffect(() => {
@@ -118,38 +114,43 @@ const Home = () => {
   }, [selectedBrand, products]);
 
   return (
-    <div className="p-3 bg-[#FAFAFA] min-h-screen">
-      <Navbar />
-      <div id="wrapper" className="flex">
-        <Sidebar productList={products} />
-        <main className="w-full flex flex-col mt-16 ml-[225px]">
-          <div className="container grid grid-cols-3 gap-16 p-16">
-            {pages.length > 0 ? (
-              pages[pageIndex].map((item) => {
-                return (
-                  <Link key={item.id} to={"/product/" + item.id}>
-                    <ProductCard
-                      name={item.name}
-                      image={imageDefault}
-                      brand={item.brand.name}
-                    />
-                  </Link>
-                );
-              })
-            ) : (
-              <p>not loaded</p>
-            )}
-          </div>
-          <Pagination
-            numberOfPages={numberOfPages}
-            nextPage={nextPage}
-            prevPage={prevPage}
-            selectPage={selectPage}
-            activePage={pageIndex}
-          />
-        </main>
+      <div className="p-3 bg-[#FAFAFA] min-h-screen">
+        <Navbar />
+        <div id="wrapper" className="flex">
+          <Sidebar productList={products} />
+          <main className="w-full flex flex-col mt-16 ml-[225px]">
+            <div className="container grid xl:grid-cols-3 gap-16 p-16 lg:grid-cols-2">
+              {pages.length > 0 ? (
+                  pages[pageIndex].map((item) => {
+                    return (
+                        <Link key={item.id} to={"/product/" + item.id}>
+                          <ProductCard
+                              name={item.name}
+                              image={
+                                item.imgMaterials.length > 0
+                                    ? "https://labstock.muckensturm.etu.mmi-unistra.fr//images/material/" +
+                                    item.imgMaterials[0].path
+                                    : imageDefault
+                              }
+                              brand={item.brand.name}
+                          />
+                        </Link>
+                    );
+                  })
+              ) : (
+                  <p>not loaded</p>
+              )}
+            </div>
+            <Pagination
+                numberOfPages={numberOfPages}
+                nextPage={nextPage}
+                prevPage={prevPage}
+                selectPage={selectPage}
+                activePage={pageIndex}
+            />
+          </main>
+        </div>
       </div>
-    </div>
   );
 };
 

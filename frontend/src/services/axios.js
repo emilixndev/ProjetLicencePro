@@ -9,8 +9,8 @@ const getHeadersKeys = () => {
 };
 export const client = () => {
   const instance = axios.create({
-    // baseURL: `https://labstock.muckensturm.etu.mmi-unistra.fr/api/`,
-    baseURL: `http://127.0.0.1:8000/api/`,
+    baseURL: `https://labstock.muckensturm.etu.mmi-unistra.fr/api/`,
+    // baseURL: `http://127.0.0.1:8000/api/`,
 
     withCredentials: true,
     headers: getHeadersKeys(),
