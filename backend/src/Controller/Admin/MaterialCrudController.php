@@ -131,7 +131,7 @@ class MaterialCrudController extends AbstractCrudController
             ->setTemplatePath("backend/custom/imgMaterials.html.twig");
 
 
-        yield DateField::new('deleveryDate', 'Début de garantie');
+        yield DateField::new('deleveryDate', 'Date de livraison');
         yield DateField::new('endOfGuarantyDate','Fin de garantie');
 
         yield AssociationField::new('brand', 'Marque');
@@ -144,12 +144,12 @@ class MaterialCrudController extends AbstractCrudController
                 return implode(', ', $types);
             })
             ->setCrudController(MaterialTypeCrudController::class)->setFormTypeOption('by_reference', false);
-        yield AssociationField::new('budget')->onlyOnForms();
+        yield AssociationField::new('budget')->hideOnIndex();
 
-        yield TextField::new('InventoryNumber','Stock')->onlyOnForms();;
+        yield TextField::new('InventoryNumber','Stock')->hideOnIndex();;
 
-        yield TextField::new('BCnumber', 'nombre BC')->onlyOnForms();
-        yield TextField::new('link','Lien')->onlyOnForms();
+        yield TextField::new('BCnumber', 'nombre BC')->hideOnIndex();
+        yield TextField::new('link','Lien')->hideOnIndex();
 
     }
 

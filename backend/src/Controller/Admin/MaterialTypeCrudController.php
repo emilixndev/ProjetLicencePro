@@ -18,11 +18,11 @@ class MaterialTypeCrudController extends AbstractCrudController
     {
         $crud
             ->showEntityActionsInlined(true)
-            ->setEntityLabelInSingular('Type de matériel')
-            ->setPageTitle('index', 'Gestion des types de matériel')
-            ->setPageTitle('edit', 'Modifier un type de matériel')
-            ->setPageTitle('new', 'Créer un nouveau type de matériel')
-            ->setPageTitle('detail', 'Détails du type de matériel');
+            ->setEntityLabelInSingular('Catégories')
+            ->setPageTitle('index', 'Gestion des catégories')
+            ->setPageTitle('edit', 'Modifier une catégorie')
+            ->setPageTitle('new', 'Créer une catégorie')
+            ->setPageTitle('detail', 'Détails catégorie');
         return $crud;
 
     }
